@@ -647,5 +647,23 @@ Regulatory obligations, sanctions / PEP / address, and geography are **Unknown**
 
 Read `Repo_2_0/` yourself next. Write defects in `Repo_2_0/REVIEW_NOTES.md`. Then run S2b against the C.8 list. Do not open C.8 until that review is written.
 
+## 2026-09-21 16:50
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+write review in `Repo_2_0/REVIEW_NOTES.md` in bullets after analyzing the output of above prompt in @Repo_2_0
+
+### Assistant
+
+The S2a review is in `Repo_2_0/REVIEW_NOTES.md`. C.8 was not opened.
+
+The pack passes the D2 done test: ten spine files exist, no new cutoff is set, `PROCESS` is retired, and D1 gaps stay visible. The main defect is that APPROVE cannot actually fire. `R-SCORED-ONLY`, `R-UNSCORED`, `R-GR`, and `R-NONPO` send every invoice to REVIEW, while T-FN-01 and the INV-1001 row still say APPROVE is possible.
+
+Other defects to fix before or during S2b: Decide vs policy on REJECT, three different Notify orders, sibling window with no `THRESHOLD_UNSET`, duplicate match missing currency, alias join vs name-mismatch, and no REVIEW owner when INV-1003 fires three flags.
+
+Next step: new chat, attach this pack plus the C.8 table, write `C8_CHECK.md`.
+
 
 

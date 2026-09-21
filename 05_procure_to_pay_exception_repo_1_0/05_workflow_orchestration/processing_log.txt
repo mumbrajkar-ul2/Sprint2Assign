@@ -1,0 +1,3 @@
+2026-08-12 11:15 INV-1003 rule=NON_PO_UNDER_5000 result=PROCESS
+2026-08-12 11:16 INV-1004 rule=NON_PO_UNDER_5000 result=PROCESS
+2026-08-12 12:01 INV-1002 duplicate_check=NO_DUPLICATE method=invoice_number_only

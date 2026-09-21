@@ -1,0 +1,105 @@
+{
+  "repo_version": "1.0",
+  "files": [
+    {
+      "path": "00_CASE_BRIEF.md",
+      "sha256_16": "c554d57ae331a824"
+    },
+    {
+      "path": "01_decision_risk_boundary/business_problem.md",
+      "sha256_16": "0f870b74dc43f3be"
+    },
+    {
+      "path": "01_decision_risk_boundary/risk_notes.md",
+      "sha256_16": "dc652739841cb0e1"
+    },
+    {
+      "path": "02_data_evidence/invoices.csv",
+      "sha256_16": "f3e5de7514e63d64"
+    },
+    {
+      "path": "02_data_evidence/supplier_aliases.csv",
+      "sha256_16": "0bff2db76d8d1b00"
+    },
+    {
+      "path": "02_data_evidence/vendor_master_changes.csv",
+      "sha256_16": "8f87cdc4a6e6519a"
+    },
+    {
+      "path": "03_detection_models/anomaly_model.md",
+      "sha256_16": "fff9f1977aea82cb"
+    },
+    {
+      "path": "03_detection_models/evaluation.csv",
+      "sha256_16": "ed9152b01f8674d4"
+    },
+    {
+      "path": "04_document_identity_compliance/invoice_extraction.md",
+      "sha256_16": "1f508fcd6da13d3b"
+    },
+    {
+      "path": "04_document_identity_compliance/vendor_verification.md",
+      "sha256_16": "53dac924e593497e"
+    },
+    {
+      "path": "05_workflow_orchestration/current_flow.md",
+      "sha256_16": "904b70dde3ca9e75"
+    },
+    {
+      "path": "05_workflow_orchestration/processing_log.txt",
+      "sha256_16": "3bf505eab3c0e0eb"
+    },
+    {
+      "path": "06_governed_decisioning/approval_matrix.csv",
+      "sha256_16": "acf5814b6bb181c3"
+    },
+    {
+      "path": "06_governed_decisioning/exception_rules.yaml",
+      "sha256_16": "96806f2ceac49e99"
+    },
+    {
+      "path": "07_explainability_review/escalation_notes.md",
+      "sha256_16": "5ed21199c4d3dc04"
+    },
+    {
+      "path": "07_explainability_review/sample_decisions.txt",
+      "sha256_16": "335677dd6a511883"
+    },
+    {
+      "path": "08_compliance_audit/audit_extract.log",
+      "sha256_16": "879b2b4424f4efd3"
+    },
+    {
+      "path": "08_compliance_audit/control_matrix.csv",
+      "sha256_16": "2f00347a329f80f7"
+    },
+    {
+      "path": "09_ai_risk_security_observability/access_review.md",
+      "sha256_16": "35f00492b940b4dc"
+    },
+    {
+      "path": "09_ai_risk_security_observability/metrics.md",
+      "sha256_16": "5ae9138c79e669e5"
+    },
+    {
+      "path": "10_production_readiness/deployment.md",
+      "sha256_16": "8e4def70df9e412e"
+    },
+    {
+      "path": "10_production_readiness/test_summary.md",
+      "sha256_16": "1f6956f0bb51227b"
+    },
+    {
+      "path": "FOLDER_GUIDE.md",
+      "sha256_16": "ec14011839a496ba"
+    },
+    {
+      "path": "KNOWN_BROWNFIELD_SIGNALS.md",
+      "sha256_16": "4d303d1fc8969f2d"
+    },
+    {
+      "path": "README.md",
+      "sha256_16": "2e3c0dbf6da0c197"
+    }
+  ]
+}

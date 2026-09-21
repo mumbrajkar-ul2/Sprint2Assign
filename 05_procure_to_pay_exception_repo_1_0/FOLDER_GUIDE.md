@@ -1,0 +1,11 @@
+# Folder Guide
+01_decision_risk_boundary
+02_data_evidence
+03_detection_models
+04_document_identity_compliance
+05_workflow_orchestration
+06_governed_decisioning
+07_explainability_review
+08_compliance_audit
+09_ai_risk_security_observability
+10_production_readiness

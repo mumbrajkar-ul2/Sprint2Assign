@@ -1,0 +1,5 @@
+INV-1003: PROCESS - under threshold.
+INV-1004: PROCESS - under threshold.
+INV-1002: PROCESS - duplicate rule not triggered.
+
+No linked evidence, model contribution, rule version, or reviewer explanation is retained.

@@ -1,0 +1,13 @@
+rules:
+  - if: duplicate_invoice_number == true
+    action: BLOCK
+  - if: bank_changed_30d == true and amount > 10000
+    action: REVIEW
+  - if: po == "" and amount < 5000
+    action: PROCESS
+
+gaps:
+  - no split-invoice aggregation
+  - no requester/approver conflict rule
+  - no supplier alias normalization
+  - no rule precedence

@@ -1,0 +1,6 @@
+control_id,control,owner,status
+P2P-01,Duplicate invoice check,AP,Active
+P2P-02,Supplier bank change approval,Master Data,Partial
+P2P-03,Segregation of duties,Finance Controls,Manual
+P2P-04,Non-PO exception review,Procurement,Inconsistent
+P2P-05,Immutable payment decision evidence,TBD,Missing

@@ -482,5 +482,170 @@ Stop using an AI recommendation as payment authorization. Send bank-change-plus-
 
 AI may analyse and recommend. Payment execute stays with a named person. Repo 1.0 does not name who pressed pay. Status: Missing.
 
+## 2026-09-21 15:58
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+what does this mean "**Done test:** you can rebuild INV-1002 and INV-1003 from cited files. `git status` (or a folder compare) shows no edits under `05_procure_to_pay_exception_repo_1_0`."? does it mean I need to go and make  changes to the invoice entries in C:\MangeshStudy\FDE\Labs\Sprint2Assign\05_procure_to_pay_exception_repo_1_0\02_data_evidence\invoices.csv file?
+
+### Assistant
+
+Leave `invoices.csv` as it is. Do not change any row under `05_procure_to_pay_exception_repo_1_0`.
+
+That done test is a check that D1 is finished. It has two parts.
+
+**1. “You can rebuild INV-1002 and INV-1003 from cited files.”**
+
+Rebuild here means retell the case from the files that already exist. A reader opens the D1 notes, follows the paths, and can say what happened without guessing.
+
+For INV-1002 that means:
+
+- `invoices.csv` already has INV-1001 and INV-1002, both V-201, PO-7001, 9800 USD, `PAID`.
+- `processing_log.txt` already has `duplicate_check=NO_DUPLICATE method=invoice_number_only`.
+
+For INV-1003 that means:
+
+- `vendor_master_changes.csv` already has CH-88 (U22 / U22 bank change).
+- `invoices.csv` already has INV-1003 at 4950 with an empty PO and `bank_changed_30d=Y`.
+- `processing_log.txt` already has `NON_PO_UNDER_5000` and `PROCESS`.
+
+That write-up is already in `D1_AsIs_Assessment/02_CASE_REPLAY.md`. You copy the file values. You do not “fix” them.
+
+**2. “`git status` shows no edits under `05_procure_to_pay_exception_repo_1_0`.”**
+
+This folder is the inherited evidence pack. D1 reads it. D1 does not tidy it. If `invoices.csv` (or any other Repo 1.0 file) shows as modified, the done test fails.
+
+This workspace has no git repo, so use a folder compare instead: Repo 1.0 should match what you started with. Only `D1_AsIs_Assessment/` should have new files.
+
+The messy rows in `invoices.csv` are the point of the assignment. INV-1002 looking like a paid duplicate, and INV-1003 looking like a split non-PO invoice, stay in the file on purpose.
+
+## 2026-09-21 16:14
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+where is the C.8 table located?
+
+### Assistant
+
+The C.8 table is in `SPRINT2_FDE_Learnings_and_Capstone_Guide.md`, heading **C.8 Patterns that failed in the labs**. It starts at line 114.
+
+It is a three-column table: what a draft does wrong, which labs already failed that way, and what to change it to.
+
+The playbook uses it in S2b only. S2a says do not attach it yet. You review `Repo_2_0/` first, then open C.8. Path in the playbook: `Implementation_Playbook.md` around the S2b section (line 278).
+
+## 2026-09-21 16:25
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+@D1_AsIs_Assessment @05_procure_to_pay_exception_repo_1_0 @Project Intent Appendix B & C.md @Execution Plan Section D2.md @RunBook Pages 1-2.pdf You are an AI FDE doing Deliverable 2: transform the As-Is evidence into Repo 2.0 with prompt engineering and context engineering.
+
+Role
+- Design the governed To-Be system. Write files under Repo_2_0/ only.
+
+Forbidden
+- Do not edit 05_procure_to_pay_exception_repo_1_0.
+- Do not edit D1_AsIs_Assessment except to read it.
+- Do not invent a numeric cutoff or a policy owner. If a threshold is required, write THRESHOLD_UNSET and say an ADR in D3 must name an owner. You may cite current-state numbers from D1 as evidence of today’s behaviour, not as the new policy.
+- Do not use accuracy 94% or 0.94 as a quality headline.
+- Do not set score = 0 after a crash. Failure goes to REVIEW and the case is unscored.
+- Do not let the model make an uncontrolled final payment decision.
+- Do not delete D1 gaps to look clean. Show how Repo 2.0 closes each named gap or marks it still open.
+
+Context you must use (cite paths)
+- D1_AsIs_Assessment/ (all files)
+- 05_procure_to_pay_exception_repo_1_0/ files cited in D1
+- Locked numbers from D1: INV-1001/1002 9800 PAID duplicate by amount+supplier+PO; INV-1003/1004 4950+4950=9900 after CH-88; CH-88 requester=approver U22; alias V-201 vs V201; invoice_number_only miss on INV-1002; P2P-05 Missing.
+
+Outcomes
+- Use APPROVE, REVIEW, REJECT only. Written policy picks the outcome. A named person owns REVIEW.
+- PROCESS is Repo 1.0 language. Do not keep PROCESS as a To-Be outcome.
+
+What Repo 2.0 must solve
+- Duplicate invoices: same supplier, PO, and amount with different invoice ids; alias ids V-201 / V201.
+- Anomalous pricing.
+- Supplier-master manipulation, including same-user bank change.
+- Approval bypass, including non-PO expedite that ignores a recent bank change.
+- Suspicious patterns, including split invoices around the current-state 5000 line (cite 5000 as As-Is, do not adopt it as your new cutoff).
+- Segregation of duties.
+- Evidence linked from vendor change to payment decision.
+- Human escalation a person can complete.
+
+Ten spine files you must write. Each file states what the To-Be system delivers.
+
+1. Repo_2_0/01_decision_risk_boundary.md
+2. Repo_2_0/02_case_data_evidence.md
+3. Repo_2_0/03_detection_models.md
+4. Repo_2_0/04_document_identity_compliance.md
+5. Repo_2_0/05_workflow.md
+6. Repo_2_0/06_governed_decisioning.md
+7. Repo_2_0/07_explainability_review.md
+8. Repo_2_0/08_compliance_audit.md
+9. Repo_2_0/09_ai_risk_security_observability.md
+10. Repo_2_0/10_production_readiness.md
+
+Also write
+- Repo_2_0/README.md — map each spine file to a D1 gap it closes.
+- Repo_2_0/TRACEABILITY.md — D1 conflict or missing-control id → Repo 2.0 file.
+
+Honesty
+- Label any metric REAL, PRECOMPUTED, SIMULATED, or EDUCATIONAL.
+- Show scores as uncalibrated ranking, not a percent chance.
+
+Done test
+- A reviewer can map each of the ten spine steps to a Repo_2_0 file.
+- No invented cutoff.
+- D1 gaps remain visible until a file says how they close.
+
+### Assistant
+
+Repo 2.0 is written under `Repo_2_0/` only. Repo 1.0 and D1 were not edited.
+
+Each spine step has one file. Written policy picks `APPROVE`, `REVIEW`, or `REJECT`. A named person owns `REVIEW`. The model ranks. The model does not pay. `PROCESS` is retired.
+
+## Spine map
+
+| Spine | File |
+|---|---|
+| 1 Decision, risk, boundary | `Repo_2_0/01_decision_risk_boundary.md` |
+| 2 Case, data, evidence | `Repo_2_0/02_case_data_evidence.md` |
+| 3 Detection models | `Repo_2_0/03_detection_models.md` |
+| 4 Documents and identity | `Repo_2_0/04_document_identity_compliance.md` |
+| 5 Workflow | `Repo_2_0/05_workflow.md` |
+| 6 Governed decisioning | `Repo_2_0/06_governed_decisioning.md` |
+| 7 Explainability and review | `Repo_2_0/07_explainability_review.md` |
+| 8 Compliance and audit | `Repo_2_0/08_compliance_audit.md` |
+| 9 Risk, security, observability | `Repo_2_0/09_ai_risk_security_observability.md` |
+| 10 Production readiness | `Repo_2_0/10_production_readiness.md` |
+
+`README.md` maps each file to the D1 gap it closes. `TRACEABILITY.md` maps C-01–C-12, P2P-01–P2P-05, M-01–M-22, and RCTE-01–RCTE-13.
+
+## Locked cases in this design
+
+| Case | As-Is | To-Be |
+|---|---|---|
+| INV-1001 / INV-1002, V-201, PO-7001, 9800, both `PAID` | `invoice_number_only` stored `NO_DUPLICATE` | Match supplier + PO + amount. INV-1002 → `REVIEW`, recommended reject of the second payment |
+| `V-201` / `V201` | No alias join | Canonical id used for matching |
+| CH-88, U22 / U22, XXXX1122 → XXXX9988 | `SUCCESS` | `REVIEW`. Change does not apply itself |
+| INV-1003 / INV-1004, 4950 + 4950 = 9900, after CH-88 | `NON_PO_UNDER_5000` `PROCESS` | `REVIEW` with CH-88 linked. Pair sum 9900 stored |
+| Scorer down | Unknown | `REVIEW`, case unscored. No `score = 0` |
+
+5000 and 10000 stay As-Is evidence. New amount lines are `THRESHOLD_UNSET`. A D3 ADR must name an owner before anyone codes a number.
+
+## Honesty and model numbers
+
+`evaluation.csv` is compared on precision, recall, and false-positive rate only. v1: precision 0.52, recall 0.71, false-positive rate 0.18. v2: precision and recall blank, false-positive rate 0.24. Honesty: **PRECOMPUTED**. Those cells are not a quality headline. This packet has four invoices. Training on representative labelled data is a later job. The data owner is Missing until D3 names one. Ranks are uncalibrated. They are not a percent chance.
+
+## What stays open on purpose
+
+Regulatory obligations, sanctions / PEP / address, and geography are **Unknown**. Goods-receipt feed is Missing. REVIEW person, payer, model owner, data owner, and P2P-05 owner stay Missing or TBD. Timeouts, retention days, and contest days stay `THRESHOLD_UNSET`.
+
+Read `Repo_2_0/` yourself next. Write defects in `Repo_2_0/REVIEW_NOTES.md`. Then run S2b against the C.8 list. Do not open C.8 until that review is written.
+
 
 

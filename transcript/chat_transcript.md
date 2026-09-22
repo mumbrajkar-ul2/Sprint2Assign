@@ -823,3 +823,130 @@ The fix: the sibling-time window is also `THRESHOLD_UNSET`. Until D3 names an ow
 
 `REVIEW_NOTES.md` still lists other defects: APPROVE cannot actually fire as written, Notify order disagrees across files, duplicate match omits currency, alias names can fight the join, and INV-1003 has no single REVIEW owner when three flags fire. Those are design bugs. They were outside this C.8 list.
 
+## 2026-09-21 17:31
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+where are the D1 Case IDs located?
+
+### Assistant
+
+They live in `D1_AsIs_Assessment/02_CASE_REPLAY.md`. That file rebuilds each packet case from the inherited source files.
+
+The case ids are:
+
+- INV-1001
+- INV-1002
+- INV-1003
+- INV-1004
+- CH-88
+- CH-89
+
+The same file also replays the alias pair `V-201` / `V201`. That pair is two supplier ids, not an invoice id.
+
+The playbook line “D1 case ids for acceptance cases” points at this replay. The S3a prompt says to read `D1_AsIs_Assessment/02_CASE_REPLAY.md` when you write the PRD.
+
+The original rows sit in Repo 1.0:
+
+- Invoices: `05_procure_to_pay_exception_repo_1_0/02_data_evidence/invoices.csv`
+- Bank and email changes: `05_procure_to_pay_exception_repo_1_0/02_data_evidence/vendor_master_changes.csv`
+- Alias ids: `05_procure_to_pay_exception_repo_1_0/02_data_evidence/supplier_aliases.csv`
+
+`D1_AsIs_Assessment/00_LOCKED_FACTS.md` also names INV-1001 and INV-1002 as already `PAID`.
+
+## 2026-09-21 17:38
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+@Repo_2_0 @Execution Plan Section D3.md @Project Intent Section 3.2.md @Runbook Pages 4-5.pdf @D1_AsIs_Assessment/02_CASE_REPLAY.md
+
+#### Prompt — S3a write the PRD
+
+You are an AI FDE doing Deliverable 3: convert Repo 2.0 into a complete Product Requirements Document.
+
+Read only Repo_2_0/ and D1_AsIs_Assessment/02_CASE_REPLAY.md.
+Do not edit 05_procure_to_pay_exception_repo_1_0.
+Do not edit Repo_2_0.
+Do not invent a cutoff. If Repo 2.0 says THRESHOLD_UNSET, keep it unset in the PRD and add a requirement that D3b must produce an ADR before that limit can be coded.
+
+Write D3_PRD/PRD.md with these sections, in this order:
+1. Business problem
+2. Users
+3. Functional requirements (give each an id: P2P-FR-001 …)
+4. AI capabilities
+5. Workflows (Ingest → Extract → Verify → Detect → Score → Decide → Review → Notify)
+6. Data
+7. Integrations
+8. Risk and compliance requirements
+9. Non-functional requirements (include scorer-down: REVIEW, case marked unscored)
+10. Acceptance criteria (give each an id: P2P-AC-001 …)
+11. Success metrics (honesty class on every metric: REAL, PRECOMPUTED, SIMULATED, or EDUCATIONAL)
+
+Acceptance cases you must include (cite D1 replay):
+- AC duplicate: INV-1001 and INV-1002, same supplier V-201, PO-7001, amount 9800, different invoice ids.
+- AC alias: V-201 vs V201.
+- AC bank change + split: CH-88 (U22/U22) then INV-1003 and INV-1004 (4950 + 4950 = 9900), expected REVIEW, not silent PROCESS.
+- AC scorer down: case goes to REVIEW, unscored.
+- AC payment retry: one idempotency key, payment count stays 1.
+
+Also write D3_PRD/TRACEABILITY.md mapping Repo_2_0 file → PRD requirement id → acceptance id.
+
+Outcomes remain APPROVE, REVIEW, REJECT. A named person owns REVIEW. The model ranks. Written policy picks the action.
+
+Done test
+- Every Repo 2.0 spine file has a PRD section.
+- Every acceptance criterion names a case or a measurable check.
+- No cutoff exists without pointing to an ADR (or THRESHOLD_UNSET).
+
+### Assistant
+
+The PRD is in `D3_PRD/PRD.md`. The map is in `D3_PRD/TRACEABILITY.md`. Repo 1.0 and Repo 2.0 were not edited. No ADR folder was added.
+
+S3b was skipped. Every new limit stays `THRESHOLD_UNSET`. D4 can still demo `REVIEW` with rule conditions that need no new number: same-user bank change, the named sibling pair INV-1003 and INV-1004, empty PO, duplicate match, scorer down. P2P-FR-006 says D3b must write an ADR with a named owner before anyone codes a number.
+
+**Outcomes stay `APPROVE`, `REVIEW`, `REJECT`.** Written policy picks the action. A named person owns `REVIEW`. The model ranks. The model does not pay.
+
+Required acceptance cases cite `D1_AsIs_Assessment/02_CASE_REPLAY.md`:
+
+| Id | Case | To-Be |
+|---|---|---|
+| P2P-AC-001 | INV-1001 and INV-1002, supplier V-201, PO-7001, 9800 USD, different invoice ids | Later invoice `REVIEW`, recommended REJECT of the second payment |
+| P2P-AC-002 | V-201 vs V201 | Canonical join, then duplicate `REVIEW` |
+| P2P-AC-003 | CH-88 (U22/U22) then INV-1003 and INV-1004, 4950 + 4950 = 9900 | `REVIEW`. Payment does not run. |
+| P2P-AC-004 | Scorer down | `REVIEW`, `unscored`, empty rank |
+| P2P-AC-005 | Payment retry, one idempotency key | Payment count stays 1 |
+
+Inherited 5000 and 10000 stay As-Is evidence. They are not To-Be policy.
+
+**Done test:** every Repo 2.0 spine file has a PRD section. Every acceptance line names a case or a measurable check. Every new cutoff points at `THRESHOLD_UNSET` or a future ADR.
+
+## 2026-09-21 17:49
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+does the PRD keeps every new limit as THRESHOLD_UNSET and D4 can still demo REVIEW using **rule conditions without a new number** ?
+
+### Assistant
+
+Yes. The PRD keeps every new limit as `THRESHOLD_UNSET`, and D4 can still demo `REVIEW` with rule conditions that need no new number. S3b can stay skipped.
+
+P2P-FR-006 says D4 must not code a number until D3b writes an ADR that names an owner. Section 9.2 lists the unset lines: new amount lines, sibling-time window, extract accept line, timeouts, contest days, retention days, velocity, rank operating line, false-positive target, auto-REJECT. Inherited 5000 and 10000 stay As-Is evidence. They are not To-Be policy.
+
+D4 sends cases to `REVIEW` with these conditions. None of them needs a new cutoff.
+
+| Rule | Condition | Demo case |
+|---|---|---|
+| R-SOD-BANK | Requester equals approver on a bank change | CH-88, U22 / U22 |
+| R-BANK-SPLIT | Linked bank change plus the named pair INV-1003 and INV-1004 | 4950 + 4950 = 9900 |
+| R-NONPO | PO empty | INV-1003, INV-1004 |
+| R-DUP | Same canonical supplier, PO, amount, currency; different invoice ids | INV-1001 then INV-1002, 9800 USD |
+| R-UNSCORED | Scorer down | Case marked unscored |
+
+9800, 4950, and 9900 are packet amounts copied from the D1 replay. They are facts on those invoices. They are not a policy line such as “REVIEW when amount is over X.”
+

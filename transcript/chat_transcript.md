@@ -950,3 +950,144 @@ D4 sends cases to `REVIEW` with these conditions. None of them needs a new cutof
 
 9800, 4950, and 9900 are packet amounts copied from the D1 replay. They are facts on those invoices. They are not a policy line such as “REVIEW when amount is over X.”
 
+## 2026-09-21 19:14
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+Explain the issue with CF-88 + split non-PO invoice pair sum 9900 USD
+
+### Assistant
+
+The packet id is **CH-88**, not CF-88.
+
+U22 changed supplier V-311’s bank account, then two invoices with no purchase order went through the next day as `PROCESS`. Each invoice is 4950 USD. Together they are 9900 USD. A person never held the pair. The money is still `APPROVED`, not `PAID`, on those two rows. The path already allowed pay on a new account after a same-user bank change.
+
+### What happened, in order
+
+1. On 2026-08-11 at 13:44, change CH-88 switched V-311 from bank account XXXX1122 to XXXX9988. Requester U22. Approver U22. The audit line stores `SUCCESS`. Source: `D1_AsIs_Assessment/02_CASE_REPLAY.md`.
+2. On 2026-08-12 at 11:15, INV-1003 arrived. Supplier V-311. Empty PO. 4950 USD. Approver U22. `bank_changed_30d=Y`. The live rule `NON_PO_UNDER_5000` stored `PROCESS`. Status on the invoice file is `APPROVED`.
+3. At 11:16, INV-1004 arrived with the same fields. Same rule. Same `PROCESS`. Pair total: 4950 + 4950 = 9900 USD.
+
+`PROCESS` is the Repo 1.0 result word. It means the invoice continued toward pay without a named person holding it.
+
+### Why the live rules let this through
+
+The non-PO expedite looks at one invoice. Empty PO and amount under 5000 stores `PROCESS`. 4950 is under 5000, so that rule fires twice.
+
+The bank-change review looks at one invoice. It stores `REVIEW` only when `bank_changed_30d` is true and amount is over 10000. 4950 is under 10000. The pair 9900 is also under 10000. That review rule never fires.
+
+There is no split rule. The files name “no split-invoice aggregation” as a gap. The system never adds INV-1003 and INV-1004 together before it decides.
+
+There is no same-user rule. U22 requested the bank change and U22 approved it. U22 is also the invoice approver on both rows.
+
+The INV-1003 audit line stores `PROCESS`. It does not link CH-88. INV-1004 has no audit line.
+
+The reason text is `PROCESS - under threshold.` It does not name 5000 or 10000.
+
+### What that means for money
+
+A new payee account is already on the supplier master. Two invoices with no purchase order sit at `APPROVED` for 9900 USD to that supplier. A person was not required to look at the bank change, the empty POs, or the pair together.
+
+### What the To-Be product does
+
+The PRD sends this sequence to `REVIEW`. Payment does not run. The case stores CH-88, the sibling pair, sum 9900, and the reason codes for empty PO, linked bank change, same-user bank change, and split sum. A named person owns that `REVIEW`.
+
+## 2026-09-21 19:16
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+"Each invoice is 4950 USD. Together they are 9900 USD." why is this a problem?
+
+### Assistant
+
+The problem is that the live system looks at each invoice alone. Each 4950 invoice is under 5000, so each one stores `PROCESS`. Together they are a 9900 USD claim with no purchase order, on a bank account that U22 just changed.
+
+9900 is the pair total from INV-1003 and INV-1004. It is not a To-Be cutoff. It shows what the two rows add up to.
+
+### What the 5000 line does on one row
+
+The live rule is: empty PO and amount under 5000 → `PROCESS`. Path: `exception_rules.yaml`.
+
+INV-1003 amount is 4950. That is under 5000. `PROCESS` fires.
+INV-1004 amount is 4950. That is under 5000. `PROCESS` fires again.
+
+A person is not asked to look at either row.
+
+### What changes when you add the two rows
+
+4950 + 4950 = 9900. That is one supplier, V-311, two invoices one minute apart, no PO, both marked `bank_changed_30d=Y`.
+
+If those goods or services had arrived as one 9900 invoice with an empty PO, the 5000 expedite would not have fired. 9900 is not under 5000. The live files have no other rule that would then force `REVIEW` on that single 9900 non-PO row. The bank-change review only fires when amount is over 10000. 9900 is also under 10000.
+
+So 9900 is a problem for two reasons at once:
+
+1. Splitting into 4950 + 4950 uses the 5000 expedite twice. The system never adds the pair, because “no split-invoice aggregation” is listed as a gap.
+2. Even the pair total 9900 sits under the 10000 bank-change review line. After CH-88, money can still move toward a new account without that review rule firing.
+
+U22 requested and approved the bank change. U22 is also the approver on both invoices. The 9900 is going toward the new account XXXX9988.
+
+### Short picture with the numbers
+
+One claim: 9900 USD, no PO, new bank account, same user U22.
+Filed as two invoices: 4950 and 4950.
+Each row is under 5000, so each row stores `PROCESS`.
+The 9900 never appears as one decision.
+
+That is why the To-Be product stores the named pair and sends both invoices to `REVIEW`. It does not adopt 5000 or 10000 as the new policy line.
+
+## 2026-09-21 19:18
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+"Supplier bank account change with one  invoice for 4950 USD and another for 3000 USD ." would you consider that a problem?
+
+### Assistant
+
+Yes, if those invoices sit on the same supplier after the bank change, and each one skipped a person because each amount is under 5000. The amounts do not need to be equal. 3000 is not in the packet. It is a what-if.
+
+### What the live rules would do
+
+The non-PO expedite looks at one row. Empty PO and amount under 5000 → `PROCESS`.
+
+- 4950 is under 5000. `PROCESS` fires.
+- 3000 is under 5000. `PROCESS` fires again.
+
+The bank-change review looks at one row. It stores `REVIEW` only when amount is over 10000.
+
+- 4950 is under 10000.
+- 3000 is under 10000.
+- Pair total 4950 + 3000 = 7950, also under 10000.
+
+So the live 10000 line still does not fire. Same miss as 9900, with a smaller pair total.
+
+### What makes it a problem
+
+The control failure is: a new payee account, then more than one invoice that each used the under-5000 path. Equal amounts (4950 + 4950) are a clean teaching pair. Unequal amounts (4950 + 3000) still use that path twice.
+
+I would still need the same facts the packet gives for CH-88:
+
+- Same supplier as the bank change.
+- Empty PO, or another reason there is no official buy record.
+- The invoices arrive after the change.
+- Who requested and who approved the bank change.
+
+If the 3000 invoice has a PO, a goods receipt, and a different supplier, that row is a different case.
+
+### What the To-Be PRD would do
+
+The PRD does not wait for a pair to reach 9900.
+
+- Same-user bank change → `REVIEW` (R-SOD-BANK). No amount needed.
+- Empty PO → `REVIEW` (R-NONPO). No amount needed.
+- Linked bank change plus empty PO → `REVIEW` (R-BANK-SPLIT). No amount needed.
+
+Each of those 4950 and 3000 rows would go to `REVIEW` on those flags, if they look like INV-1003 (empty PO, linked change).
+
+A numeric sibling-time window stays `THRESHOLD_UNSET`. Until a D3b ADR, the stored sibling pair is only INV-1003 and INV-1004. D4 would not invent a general “any two invoices under 5000” join for 4950 + 3000. The person still sees each invoice with the linked bank change.
+

@@ -1,0 +1,6 @@
+{
+  "name": "P2P-Payment-Control",
+  "description": "Procure-to-Pay Payment Control & Exception Governance: Rules-governed invoice decisions, human-in-the-loop review, WORM audit logging, and payment idempotency.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

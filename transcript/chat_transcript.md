@@ -1121,3 +1121,372 @@ The file now sits at `D4_App/Documentation/SPINE_IMPLEMENTATION.md`.
 
 The `D4_App/README.md` link points to that path. The old copy at `D4_App/SPINE_IMPLEMENTATION.md` is gone.
 
+## 2026-09-22 10:25
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+in @Implementation_Playbook.md it says on line 495 - "3. Paste the S4b prompt. Fill in the Studio URL and what you actually saw." what is expected when it comes to "what you actually saw"?
+
+### Assistant
+
+Line 495 is asking for **your click-through notes from the Studio app**, written before Cursor writes the D4 evidence files.
+
+S4b is a recording step. Cursor is told not to invent screens you did not confirm. You supply the facts. Cursor turns them into `DEMO_SCRIPT.md`, `TEST_EVIDENCE.md`, `SIDE_EFFECT_COUNTER.md`, and `README.md`.
+
+The S4b prompt names the three things to paste:
+
+1. **Studio URL** — the live app link, for example the one already in `D4_App/README.md`.
+2. **Screens that exist** — only the screens you opened. If Review or Case History is missing, say that.
+3. **What the UI showed for each S4c case** — expected vs observed, PASS or FAIL, and the honesty label on any number (`SIMULATED`, `PRECOMPUTED`, `REAL`, or `EDUCATIONAL`).
+
+### What to write for each demo case
+
+Use the S4c table. For each row, write the outcome on screen, the rule ids if shown, and any count or badge.
+
+| Case | What to record as “what I saw” |
+|---|---|
+| INV-1001 and INV-1002 | Whether INV-1002 was flagged as a duplicate of INV-1001. Outcome shown. Whether both could go to Pay. |
+| V-201 vs V201 | Whether the UI treated them as the same supplier (Alpha Industrial Supply). |
+| CH-88 then INV-1003 and INV-1004 | Outcome (must be REVIEW). Reviewer name you typed. Whether Disagree worked. |
+| Scorer down | Score field empty or `UNSCORED`, not `0`. Outcome REVIEW. |
+| Pay twice | `payment_count` after the second click. Must stay 1. Same for notify if you retried Notify. |
+
+Also note: honesty badge on the rank number, whether Case History can rebuild one case, and Pay/Notify counts if you measured them. If you did not measure a count, write `Unknown`.
+
+### Example paste into the S4b chat
+
+```text
+Studio URL: https://ai.studio/apps/<your-id>
+
+Screens present: Ingest, Extract, Verify, Detect, Score+Decide, Review, Notify, Pay, Case History.
+Screens missing: none.
+
+INV-1001 / INV-1002: INV-1002 showed duplicate of INV-1001 (same supplier+PO+amount). Outcome REVIEW. PASS. Rank badge SIMULATED.
+
+V-201 / V201: UI showed Alpha Industrial Supply for both. PASS.
+
+CH-88 + INV-1003 / INV-1004: both invoices REVIEW. Reviewer "Ada". Disagree set REJECT. PASS.
+
+Scorer down: score blank, banner UNSCORED, outcome REVIEW. PASS.
+
+Pay retry on INV-1001: first click payment_count=1. Second click still 1. PASS.
+
+Pay/Notify naive vs safe counts: Unknown. I did not count naive retries.
+```
+
+That block is “what you actually saw.” Step 4 then asks you to paste it so Cursor can fill the evidence files from those notes, not from the PRD wishlist.
+
+## 2026-09-22 10:36
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+run the application from "https://aistudio.google.com/apps/4d381f01-eadc-4c67-bc79-5a3f55eb5e53?project=gen-lang-client-0889107005&showAssistant=true&showPreview=true&fullscreenApplet=true " and create the block listing “what you actually saw" to insert in the S4b prompt
+
+### Assistant
+
+The hosted Studio link opened a Google sign-in page, so these notes come from the local app at `http://localhost:3000`. That is the `D4_App` project whose README points at the same Studio app id. The local server is still running if you want to click the same path.
+
+Paste this under the S4b prompt:
+
+```text
+Studio URL: https://aistudio.google.com/apps/4d381f01-eadc-4c67-bc79-5a3f55eb5e53?project=gen-lang-client-0889107005&showAssistant=true&showPreview=true&fullscreenApplet=true
+Observed on the local run of that app: http://localhost:3000 (Google sign-in blocked the hosted page).
+
+Screens I opened:
+- Workflow: 1. Ingest, 2. Extract, 3. Verify, 4. Detect, 5. Score + Decide, 6. Review, 7. Notify, 8. Pay
+- Case History & Rebuild
+- WORM Reference Store
+- Model Governance & Metrics
+
+Tabs visible that I did not open: Escalation Events (badge showed 3), Acceptance Test Suite (AC-001..AC-038).
+
+Header on every screen: outcomes APPROVE | REVIEW | REJECT only. Banner says No "PROCESS". Footer: Rule Pack D3a, Model p2p-risk-2.
+
+Seed cases in the Active Case list:
+- INV-1001 • V-201 • $9800 (APPROVE)
+- INV-1002 • V-201 • $9800 (REVIEW)
+- INV-1003 • V-311 • $4950 (REVIEW)
+- INV-1004 • V-311 • $4950 (REVIEW)
+- INV-1005 • V-500 • $3200 (APPROVE)
+
+INV-1001 / INV-1002 duplicate. PASS.
+- Detect on INV-1002: Duplicate Detector FLAGGED. Match key V-201:PO-7001:9800. Prior match INV-1001. Invoice ID match: No (Different ID).
+- Rank: #4 of 420 cohort. Raw index 0.92. Honesty Badge: PRECOMPUTED. Status: SCORED. Model version p2p-risk-2.
+- Score + Decide: outcome REVIEW. Recommended: REJECT. Rule fired: R-DUP. Reasons: DUP_SUPPLIER_PO_AMOUNT, POLICY_REVIEW. Rule pack p2p-rules-v2.0.
+- Pay on INV-1002: Status PAYMENT LOCKED. Outcome on screen: REVIEW. Payment Count: 0. Pay button was present and the lock text said payment runs only for APPROVE.
+- Detect on INV-1001: Duplicate Detector CLEAN. Rank #240 of 420 cohort. Raw index 0.12. Honesty Badge: PRECOMPUTED. Pay status: PAID & SETTLED. Payment Count: 1. Payer shown: AP-DIRECTOR-1. Audit ID: AUDIT-INV-1001-01.
+- Extract on INV-1002 showed confidence percents with no honesty badge: Invoice ID 99%, Supplier ID 98%, Supplier Name 99%, PO 99%, Amount 99%, Approver U11 97%, Bank Changed N 99%. Extractor label: ocr-v2.1.
+
+V-201 vs V201 alias. PASS for the id join. The display name is not the same string.
+- Inject V201 Alias created INV-1006-ALIAS • V201 • $9800 (REVIEW).
+- Verify: Raw Supplier ID V201. Canonical Supplier ID V-201. Canonical Entity line: Alpha Industries Supply. Known alias pair line: V-201 / V201 (Alpha Industrial / Industries).
+- The seeded V-201 case (INV-1002 Verify) says Canonical Entity: Alpha Industrial Supply.
+- Detect on INV-1006-ALIAS: Duplicate Detector FLAGGED. Match key V-201:PO-7001:9800. Prior match INV-1001. Rank #5 of 420 cohort. Raw index 0.91. Honesty Badge: SIMULATED. Status: SCORED.
+- Score + Decide: outcome REVIEW. Recommended: REJECT. Rules fired: R-DUP, R-ALIAS. Reasons: DUP_SUPPLIER_PO_AMOUNT, ALIAS_CANONICAL_JOIN, POLICY_REVIEW.
+
+CH-88 then INV-1003 and INV-1004. PASS. Both stay REVIEW until a person acts. Disagree is on screen and it works.
+- INV-1003 Verify: Identity Consistency SOD VIOLATION FLAGGED. Record CH-88 (bank_account). Requester U22. Approver U22 (Same user!). Master Data Status: HELD_FOR_REVIEW. Masked account XXXX9988. Bank verification method: none.
+- INV-1003 Detect: Duplicate CLEAN. Split sibling SIBLING DETECTED, sibling INV-1004, pair sum $9900 USD. PO check NON-PO. Rank #2 of 420 cohort. Raw index 0.96. Honesty Badge: PRECOMPUTED.
+- INV-1003 Score + Decide: outcome REVIEW. Recommended: REJECT. Rules: R-SOD-BANK, R-BANK-SPLIT, R-NONPO. Reasons: NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW. Rationale names CH-88, bank XXXX1122 to XXXX9988, requester and approver U22, sibling INV-1004, sum 9900 USD.
+- INV-1004 Score + Decide: same REVIEW / recommended REJECT pattern. Sibling named as INV-1003. Same reason codes. Rules: R-SOD-BANK, R-BANK-SPLIT, R-NONPO.
+- Review on INV-1003 before a click: Queue Status AWAITING NAMED REVIEWER. Recommended REJECT. Three equal buttons: Agree REJECT, Disagree & Set APPROVE, Manager Override. Name field was already filled with Sarah Jenkins (AP Lead).
+- Blank name then Disagree: stayed on Review. Message: "Reviewer account name is required by PRD P2P-FR-003."
+- Name Ada, then Disagree & Set APPROVE: case list changed INV-1003 to APPROVE. Screen moved to Notify. Notify payload Decision Outcome: APPROVE. Notify Count: 0. Reason codes on the payload were still NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW.
+- Case History after that click, case INV-1003: state REVIEWED. 1 audit row. Actor: Ada. Transition DECIDED to REVIEWED. Outcome & score: APPROVE • #2 of 420 cohort. Model: p2p-risk-2. Rule: p2p-rules-v2.0. Reasons: NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW. Note on row: "Review closed with disposition: disagree. Final outcome: APPROVE."
+- Before that click, Case History for INV-1003 said 0 audit rows: "No audit rows written yet for this case."
+- Review screen also showed "Active Review Session Time: 14s" with no honesty badge. That 14s was the same on every Review screen I opened.
+
+Scorer down. PASS. I used INV-1005, which started as APPROVE.
+- Header button after the toggle: Scorer: DOWN (UNSCORED).
+- Detect: Honesty Badge: REAL. Status: UNSCORED. Rank field: NULL. Banner: UNSCORED (Scorer Down / Timeout).
+- Score + Decide: outcome REVIEW. Recommended: REVIEW. Rule fired: R-UNSCORED. Reasons: SCORER_UNSCORED, POLICY_REVIEW. Case list showed INV-1005 (REVIEW).
+- Review buttons: Agree REVIEW, Disagree & Set APPROVE, Manager Override.
+- The rank field showed the word NULL. I did not see a score of 0 on that screen.
+
+Pay twice. PASS.
+- INV-1001 was already PAID. Payment Count showed 1. Click "Retry / Re-verify Idempotent Payment". Banner: "Idempotency verified: Payment already completed under key 'INV-1001:payment'. Returned existing payment confirmation. Count remains 1." Payment Count stayed 1.
+- INV-1005 before any pay click: outcome APPROVE, Payment Count 0, button "Authorize & Pay $3,200 USD". Payer field already held Michael Vance (Treasurer).
+- First pay click: "Payment released successfully. Key: INV-1005:payment. State updated to PAID." Payment Count: 1. Status: PAID & SETTLED. Audit ID: AUDIT-INV-1005-PAY. Header WORM Ref changed from 1 row to 2 rows.
+- Second click: "Idempotency verified: Payment already completed under key 'INV-1005:payment'. ... Count remains 1." Payment Count stayed 1.
+
+Notify retry. PASS for the safe counter.
+- INV-1001 Notify Count was already 1. Key INV-1001:notify. Supplier line: Alpha Industrial Supply (V-201).
+- Click "Retry / Verify Idempotent Notify". Banner: "Idempotency verified: Notification already sent under key 'INV-1001:notify'. Returned existing record. Count remains 1." Notify Count stayed 1.
+
+Pay/Notify naive vs safe vs cached counts:
+- Safe Pay count: measured. Stays 1. See INV-1001 and INV-1005 above.
+- Safe Notify count: measured. Stays 1 on INV-1001.
+- Naive count: Unknown. I did not run a path that ignores the idempotency key.
+- Cached count: Unknown. The screen does not show a separate cached counter.
+- How to measure naive: count payment and notify writes with the idempotency check removed, using the same case id and step name, then compare with payment_count and notify_count on screen.
+
+Other numbers I saw:
+- Model Governance page: no accuracy 94% figure. Table honesty classes included PRECOMPUTED (precision 0.52, recall 0.71, false-positive rate 0.18 / 0.24) and EDUCATIONAL (packet pattern catch rate 100% (4 / 4)). PR-AUC row said Missing, honesty Unknown.
+- WORM page after Reset: 1 locked row, WORM-REF-001, audit AUDIT-INV-1001-01, case INV-1001, outcome APPROVE, timestamp 2026-08-11T10:05:00. Page text says no delete or overwrite controls are on that screen. I did not see a delete button.
+```
+
+## 2026-09-22 10:39
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+is the block covering "a list of screens that exist, and the result of each demo case (PASS/FAIL plus what the UI showed)."?
+
+### Assistant
+
+Yes. The block has both parts that sentence asks for.
+
+**Screens that exist.** These were opened:
+
+- The eight workflow screens: Ingest, Extract, Verify, Detect, Score + Decide, Review, Notify, Pay
+- Case History & Rebuild
+- WORM Reference Store
+- Model Governance & Metrics
+
+Score and Decide are one screen, titled “5. Score + Decide”. There is no separate Decide screen.
+
+Escalation Events and Acceptance Test Suite are only header tabs. Those pages were not opened, so the block does not say those screens exist.
+
+**Each demo case.** Each S4c case has PASS and the text that was on screen:
+
+| Case | Verdict in the block |
+|---|---|
+| INV-1001 and INV-1002 duplicate | PASS, plus the flag, the locked pay screen, and the rank badge |
+| V-201 vs V201 | PASS for the id join, plus the two supplier-name strings |
+| CH-88 with INV-1003 and INV-1004 | PASS, plus REVIEW, the Ada disagree click, and the audit row |
+| Scorer down on INV-1005 | PASS, plus NULL, UNSCORED, and REVIEW |
+| Pay twice | PASS, plus payment count staying at 1 on INV-1001 and INV-1005 |
+
+That is the full case list the evidence table asks for.
+
+The notify retry, the metrics page, and the Unknown naive and cached counts are extra. Those lines feed the other three files. They are not required by that one sentence.
+
+## 2026-09-22 10:50
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+@D3_PRD/PRD.md
+You are an AI FDE recording Deliverable 4 evidence.
+
+Do not edit 05_procure_to_pay_exception_repo_1_0.
+Do not invent screens I did not confirm.
+
+I will paste: the Studio app URL, a list of screens that exist, and the result of each demo case (PASS/FAIL plus what the UI showed).
+
+URL:https://aistudio.google.com/apps/4d381f01-eadc-4c67-bc79-5a3f55eb5e53?project=gen-lang-client-0889107005&showAssistant=true&showPreview=true&fullscreenApplet=true
+
+What I saw:
+-----What I  saw (Start)----------------------------------------------------------
+Studio URL: https://aistudio.google.com/apps/4d381f01-eadc-4c67-bc79-5a3f55eb5e53?project=gen-lang-client-0889107005&showAssistant=true&showPreview=true&fullscreenApplet=true
+Observed on the local run of that app: http://localhost:3000 (Google sign-in blocked the hosted page).
+
+Screens I opened:
+- Workflow: 1. Ingest, 2. Extract, 3. Verify, 4. Detect, 5. Score + Decide, 6. Review, 7. Notify, 8. Pay
+- Case History & Rebuild
+- WORM Reference Store
+- Model Governance & Metrics
+
+Tabs visible that I did not open: Escalation Events (badge showed 3), Acceptance Test Suite (AC-001..AC-038).
+
+Header on every screen: outcomes APPROVE | REVIEW | REJECT only. Banner says No "PROCESS". Footer: Rule Pack D3a, Model p2p-risk-2.
+
+Seed cases in the Active Case list:
+- INV-1001 • V-201 • $9800 (APPROVE)
+- INV-1002 • V-201 • $9800 (REVIEW)
+- INV-1003 • V-311 • $4950 (REVIEW)
+- INV-1004 • V-311 • $4950 (REVIEW)
+- INV-1005 • V-500 • $3200 (APPROVE)
+
+INV-1001 / INV-1002 duplicate. PASS.
+- Detect on INV-1002: Duplicate Detector FLAGGED. Match key V-201:PO-7001:9800. Prior match INV-1001. Invoice ID match: No (Different ID).
+- Rank: #4 of 420 cohort. Raw index 0.92. Honesty Badge: PRECOMPUTED. Status: SCORED. Model version p2p-risk-2.
+- Score + Decide: outcome REVIEW. Recommended: REJECT. Rule fired: R-DUP. Reasons: DUP_SUPPLIER_PO_AMOUNT, POLICY_REVIEW. Rule pack p2p-rules-v2.0.
+- Pay on INV-1002: Status PAYMENT LOCKED. Outcome on screen: REVIEW. Payment Count: 0. Pay button was present and the lock text said payment runs only for APPROVE.
+- Detect on INV-1001: Duplicate Detector CLEAN. Rank #240 of 420 cohort. Raw index 0.12. Honesty Badge: PRECOMPUTED. Pay status: PAID & SETTLED. Payment Count: 1. Payer shown: AP-DIRECTOR-1. Audit ID: AUDIT-INV-1001-01.
+- Extract on INV-1002 showed confidence percents with no honesty badge: Invoice ID 99%, Supplier ID 98%, Supplier Name 99%, PO 99%, Amount 99%, Approver U11 97%, Bank Changed N 99%. Extractor label: ocr-v2.1.
+
+V-201 vs V201 alias. PASS for the id join. The display name is not the same string.
+- Inject V201 Alias created INV-1006-ALIAS • V201 • $9800 (REVIEW).
+- Verify: Raw Supplier ID V201. Canonical Supplier ID V-201. Canonical Entity line: Alpha Industries Supply. Known alias pair line: V-201 / V201 (Alpha Industrial / Industries).
+- The seeded V-201 case (INV-1002 Verify) says Canonical Entity: Alpha Industrial Supply.
+- Detect on INV-1006-ALIAS: Duplicate Detector FLAGGED. Match key V-201:PO-7001:9800. Prior match INV-1001. Rank #5 of 420 cohort. Raw index 0.91. Honesty Badge: SIMULATED. Status: SCORED.
+- Score + Decide: outcome REVIEW. Recommended: REJECT. Rules fired: R-DUP, R-ALIAS. Reasons: DUP_SUPPLIER_PO_AMOUNT, ALIAS_CANONICAL_JOIN, POLICY_REVIEW.
+
+CH-88 then INV-1003 and INV-1004. PASS. Both stay REVIEW until a person acts. Disagree is on screen and it works.
+- INV-1003 Verify: Identity Consistency SOD VIOLATION FLAGGED. Record CH-88 (bank_account). Requester U22. Approver U22 (Same user!). Master Data Status: HELD_FOR_REVIEW. Masked account XXXX9988. Bank verification method: none.
+- INV-1003 Detect: Duplicate CLEAN. Split sibling SIBLING DETECTED, sibling INV-1004, pair sum $9900 USD. PO check NON-PO. Rank #2 of 420 cohort. Raw index 0.96. Honesty Badge: PRECOMPUTED.
+- INV-1003 Score + Decide: outcome REVIEW. Recommended: REJECT. Rules: R-SOD-BANK, R-BANK-SPLIT, R-NONPO. Reasons: NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW. Rationale names CH-88, bank XXXX1122 to XXXX9988, requester and approver U22, sibling INV-1004, sum 9900 USD.
+- INV-1004 Score + Decide: same REVIEW / recommended REJECT pattern. Sibling named as INV-1003. Same reason codes. Rules: R-SOD-BANK, R-BANK-SPLIT, R-NONPO.
+- Review on INV-1003 before a click: Queue Status AWAITING NAMED REVIEWER. Recommended REJECT. Three equal buttons: Agree REJECT, Disagree & Set APPROVE, Manager Override. Name field was already filled with Sarah Jenkins (AP Lead).
+- Blank name then Disagree: stayed on Review. Message: "Reviewer account name is required by PRD P2P-FR-003."
+- Name Ada, then Disagree & Set APPROVE: case list changed INV-1003 to APPROVE. Screen moved to Notify. Notify payload Decision Outcome: APPROVE. Notify Count: 0. Reason codes on the payload were still NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW.
+- Case History after that click, case INV-1003: state REVIEWED. 1 audit row. Actor: Ada. Transition DECIDED to REVIEWED. Outcome & score: APPROVE • #2 of 420 cohort. Model: p2p-risk-2. Rule: p2p-rules-v2.0. Reasons: NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW. Note on row: "Review closed with disposition: disagree. Final outcome: APPROVE."
+- Before that click, Case History for INV-1003 said 0 audit rows: "No audit rows written yet for this case."
+- Review screen also showed "Active Review Session Time: 14s" with no honesty badge. That 14s was the same on every Review screen I opened.
+
+Scorer down. PASS. I used INV-1005, which started as APPROVE.
+- Header button after the toggle: Scorer: DOWN (UNSCORED).
+- Detect: Honesty Badge: REAL. Status: UNSCORED. Rank field: NULL. Banner: UNSCORED (Scorer Down / Timeout).
+- Score + Decide: outcome REVIEW. Recommended: REVIEW. Rule fired: R-UNSCORED. Reasons: SCORER_UNSCORED, POLICY_REVIEW. Case list showed INV-1005 (REVIEW).
+- Review buttons: Agree REVIEW, Disagree & Set APPROVE, Manager Override.
+- The rank field showed the word NULL. I did not see a score of 0 on that screen.
+
+Pay twice. PASS.
+- INV-1001 was already PAID. Payment Count showed 1. Click "Retry / Re-verify Idempotent Payment". Banner: "Idempotency verified: Payment already completed under key 'INV-1001:payment'. Returned existing payment confirmation. Count remains 1." Payment Count stayed 1.
+- INV-1005 before any pay click: outcome APPROVE, Payment Count 0, button "Authorize & Pay $3,200 USD". Payer field already held Michael Vance (Treasurer).
+- First pay click: "Payment released successfully. Key: INV-1005:payment. State updated to PAID." Payment Count: 1. Status: PAID & SETTLED. Audit ID: AUDIT-INV-1005-PAY. Header WORM Ref changed from 1 row to 2 rows.
+- Second click: "Idempotency verified: Payment already completed under key 'INV-1005:payment'. ... Count remains 1." Payment Count stayed 1.
+
+Notify retry. PASS for the safe counter.
+- INV-1001 Notify Count was already 1. Key INV-1001:notify. Supplier line: Alpha Industrial Supply (V-201).
+- Click "Retry / Verify Idempotent Notify". Banner: "Idempotency verified: Notification already sent under key 'INV-1001:notify'. Returned existing record. Count remains 1." Notify Count stayed 1.
+
+Pay/Notify naive vs safe vs cached counts:
+- Safe Pay count: measured. Stays 1. See INV-1001 and INV-1005 above.
+- Safe Notify count: measured. Stays 1 on INV-1001.
+- Naive count: Unknown. I did not run a path that ignores the idempotency key.
+- Cached count: Unknown. The screen does not show a separate cached counter.
+- How to measure naive: count payment and notify writes with the idempotency check removed, using the same case id and step name, then compare with payment_count and notify_count on screen.
+
+Other numbers I saw:
+- Model Governance page: no accuracy 94% figure. Table honesty classes included PRECOMPUTED (precision 0.52, recall 0.71, false-positive rate 0.18 / 0.24) and EDUCATIONAL (packet pattern catch rate 100% (4 / 4)). PR-AUC row said Missing, honesty Unknown.
+- WORM page after Reset: 1 locked row, WORM-REF-001, audit AUDIT-INV-1001-01, case INV-1001, outcome APPROVE, timestamp 2026-08-11T10:05:00. Page text says no delete or overwrite controls are on that screen. I did not see a delete button.
+------------What I Saw (End)----------------------------------------------------
+
+Write:
+- D4_App/DEMO_SCRIPT.md — minute-by-minute click path for Ingest → Extract → Verify → Detect → Score → Decide → Review → Notify → Pay. Honesty class on every number.
+- D4_App/TEST_EVIDENCE.md — table of cases: INV-1001/1002 duplicate, V-201/V201 alias, CH-88 + INV-1003/1004, scorer down, payment retry. Columns: case, expected, observed, PASS/FAIL, honesty class.
+- D4_App/SIDE_EFFECT_COUNTER.md — naive vs safe vs cached counts for Pay and Notify (Lab 29). If I did not measure a number, write Unknown and how to measure it.
+- D4_App/README.md — URL, platform (Google AI Studio Build), PRD version, model/rule versions shown in the UI.
+
+If a required screen is missing, list it as a defect. Do not claim it exists.
+
+### Assistant
+
+The four evidence files are written from the local run at `http://localhost:3000`. The Studio URL stopped at Google sign-in, so the hosted page is not described.
+
+All five demo cases are PASS, using only the text you recorded:
+
+- INV-1001 / INV-1002 duplicate: REVIEW, recommended REJECT, rule R-DUP, pay locked with count 0
+- V-201 / V201: id join PASS. Display names stay two strings (Alpha Industrial Supply vs Alpha Industries Supply). Rank badge SIMULATED
+- CH-88 with INV-1003 and INV-1004: both REVIEW until Ada disagrees. Case History then has one row, DECIDED to REVIEWED
+- Scorer down on INV-1005: rank shows NULL, outcome REVIEW, badge REAL. Notes record no score of 0
+- Pay twice: count stays 1 on INV-1001 and INV-1005
+
+Notify retry on INV-1001 is also PASS. Count stays 1.
+
+Unknown, with the measurement method in `SIDE_EFFECT_COUNTER.md`: naive Pay, naive Notify, cached Pay, cached Notify.
+
+Screens opened are the eight workflow steps, Case History, WORM, and Model Governance. Escalation Events (badge 3) and Acceptance Test Suite were visible and not opened, so their contents are not claimed.
+
+Two numbers were on screen with no honesty badge: Extract confidence percents on INV-1002 (extractor ocr-v2.1), and Review session time 14s on every Review screen. Model Governance showed no accuracy 94% figure. PR-AUC was Missing, honesty Unknown.
+
+One gap in the click order: scorer down left INV-1005 as REVIEW, and the pay pass recorded it as APPROVE. The notes do not name the click that restored APPROVE. The script says to confirm APPROVE, or Reset, before repeating that pay.
+
+Repo 1.0 was not edited.
+
+Files:
+
+- `D4_App/DEMO_SCRIPT.md`
+- `D4_App/TEST_EVIDENCE.md`
+- `D4_App/SIDE_EFFECT_COUNTER.md`
+- `D4_App/README.md`
+
+Versions on the UI: PRD D3a, model `p2p-risk-2`, rule pack `p2p-rules-v2.0`, footer Rule Pack D3a.
+
+## 2026-09-22 11:01
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+did you find any screen missing and if so...where have you documented it?
+
+### Assistant
+
+No required screen was missing. The eight workflow steps, Case History & Rebuild, WORM Reference Store, and Model Governance & Metrics were all opened.
+
+Two tabs were visible and not opened. I recorded them as unconfirmed pages, not as missing-screen defects:
+
+- Escalation Events (badge showed 3)
+- Acceptance Test Suite (AC-001..AC-038)
+
+That note is in three files:
+
+- `D4_App/DEMO_SCRIPT.md` — section “Not a confirmed page”, and the line that says no required workflow screen from this session was missing
+- `D4_App/TEST_EVIDENCE.md` — table “Screens and gaps”
+- `D4_App/README.md` — “Visible and not opened”
+
+`SIDE_EFFECT_COUNTER.md` does not list screens. It only records the Unknown Pay and Notify counts.
+
+## 2026-09-22 11:02
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+do we need to make any corrections to the app ?
+
+### Assistant
+
+No. The five cases you marked PASS do not need an app change. Duplicate hold, the alias join, the Ada disagree path, scorer-down NULL, and the second pay staying at count 1 already match what you saw.
+
+Leave these as they are. They are gaps in what was measured, not failed screens:
+
+- Escalation Events and Acceptance Test Suite were not opened.
+- Naive and cached Pay and Notify counts were not measured. The safe counts already stay at 1.
+
+Two items on screens you did open are label gaps. They did not fail a demo case:
+
+- Extract on INV-1002 shows confidence percents, with extractor `ocr-v2.1`, and no honesty badge. Detect ranks on the same app do carry a badge.
+- Review shows Active Review Session Time starting at 14s each time that screen opens, with no honesty badge. You saw that same 14s on every Review screen.
+
+I have not changed the app. Say if you want those two labels fixed.
+

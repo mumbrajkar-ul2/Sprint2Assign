@@ -1490,3 +1490,111 @@ Two items on screens you did open are label gaps. They did not fail a demo case:
 
 I have not changed the app. Say if you want those two labels fixed.
 
+## 2026-09-22 11:09
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+The local Vite dev server on port 3000 was aborted.
+
+### Assistant
+
+The local app on port 3000 has stopped. The click-through notes from that run are unchanged.
+
+## 2026-09-22 11:10
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+@D1_AsIs_Assessment @Repo_2_0 @D3_PRD @D4_App  @Project Intent - Section 3.3.md @Runbook Pages 4-5.pdf
+
+You are an AI FDE preparing the team presentation for this capstone.
+
+Read D1_AsIs_Assessment/, Repo_2_0/, D3_PRD/, and D4_App/.
+Do not edit 05_procure_to_pay_exception_repo_1_0.
+Do not invent evidence. If a fact is missing, write Unknown.
+
+Write Presentation/DEFENCE.md answering only the questions this packet used, with a file citation after each answer:
+1. What event did you score or route, and which facts existed at decision time?
+2. What metric did you report instead of accuracy 94%, and why?
+3. What are the outcome names? Who makes the money decision?
+4. What would a retry duplicate, and how did you prove the count?
+5. Which inherited gap did you leave visible until a spec closed it?
+6. Rebuild one case: actor, from-state, to-state, score, reasons, model version, rule version. Prefer INV-1003 after CH-88 if D4 evidence supports it.
+7. Which facts does the Repo 1.0 audit trail leave out? Which of those does D4 now store?
+8. How does a person contest the outcome?
+9. If a control is missing from Repo 1.0, did you treat it as missing? Give one example (P2P-05).
+
+Write Presentation/SLIDE_OUTLINE.md with one slide per item, in trainer order:
+1. What the case is (use case 5, payment decision)
+2. D1 As-Is findings (three conflicts, P2P-05 Missing)
+3. D2 Repo 2.0 spine map
+4. D3 PRD and acceptance cases
+5. D4 demo path and five cases
+6. One rebuilt case
+7. Residual risk and Unknowns
+
+Each slide bullet must stand alone. Short sentences. Everyday words. No accuracy 94% headline.
+
+Write Presentation/README.md listing the four deliverable folders and the two presentation files.
+
+Done test: a teammate can present from SLIDE_OUTLINE.md and answer DEFENCE.md without opening Cursor.
+
+### Assistant
+
+The presentation pack is in `Presentation/`. A teammate can speak the seven slides and answer the nine defence questions from those files.
+
+**What you can say out loud**
+
+The event is one supplier invoice, and the question is whether it can go on to payment. The facts at decision time are the invoice id, supplier, purchase order, amount, currency, approver, the 30-day bank-change flag, and the named rule and model versions.
+
+The numbers we lead with are precision, recall, and false-positive rate. Model v2 flags 0.24 of good invoices. Model v1 flags 0.18. Precision and recall on v2 are blank. PR-AUC is Missing.
+
+Outcomes are APPROVE, REVIEW, and REJECT. Written rules pick the outcome. A named person releases the payment.
+
+A second Pay or Notify would duplicate that write. On INV-1005 the payment count went from 0 to 1 and stayed 1 on the retry. Key: `INV-1005:payment`.
+
+The inherited “missing PO under threshold” test and the “exact invoice-number duplicate” test stayed visible until the requirements document sent those cases to REVIEW. The sibling time window is still unset.
+
+Rebuild INV-1003 after Ada: actor Ada, DECIDED to REVIEWED, rank #2 of 420 cohort, reasons NON_PO, BANK_CHANGE_LINKED, SOD_SAME_USER_BANK, SPLIT_SIBLING_SUM, POLICY_REVIEW, model p2p-risk-2, rule p2p-rules-v2.0.
+
+P2P-05 stays Missing, owner TBD. The two old audit lines do not make that control exist.
+
+**Files**
+
+- `Presentation/SLIDE_OUTLINE.md` — slides 1 to 7
+- `Presentation/DEFENCE.md` — nine answers, each with a source file
+- `Presentation/README.md` — the four folders and those two files
+
+Unknowns a judge may ask: prompt id on the audit row, whether Case History showed CH-88 as its own field, the Open Contest click, a second write of the same audit id, and naive versus cached counts. Those stay Unknown because the 22 Sep notes did not record them.
+
+## 2026-09-22 11:18
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+Create a PowerPoint Presentation with the above content that is expected to be presented. Provide detailed notes in the notes section of each slide in plain-speak.
+
+### Assistant
+
+The deck is `Presentation/Team_Presentation.pptx`. It has the seven slides in trainer order. Each slide has a speaking script in the notes pane.
+
+Open the file in PowerPoint. Use View, then Notes, to see the script under the slide. The script says what to speak, what a term means, and which file the fact comes from.
+
+The slides are:
+
+1. One supplier invoice may go on to payment.
+2. Three conflicts. Control P2P-05 is Missing.
+3. One design file for each of the ten runbook steps.
+4. Five acceptance cases the app must pass.
+5. Five clicked cases passed on the local app.
+6. Case History rebuilds INV-1003 after Ada’s click.
+7. These items stay open on purpose.
+
+The notes for slide 6 walk the rebuild: actor Ada, from-state DECIDED, to-state REVIEWED, rank #2 of 420, the five reason codes, model p2p-risk-2, rule p2p-rules-v2.0. Prompt id stays Unknown.
+
+`Presentation/README.md` now lists the deck next to the outline and the defence answers.
+

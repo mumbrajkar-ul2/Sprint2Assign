@@ -1091,3 +1091,33 @@ Each of those 4950 and 3000 rows would go to `REVIEW` on those flags, if they lo
 
 A numeric sibling-time window stays `THRESHOLD_UNSET`. Until a D3b ADR, the stored sibling pair is only INV-1003 and INV-1004. D4 would not invent a general “any two invoices under 5000” join for 4950 + 3000. The person still sees each invoice with the linked bank change.
 
+## 2026-09-21 21:36
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+Document how the application - with source code in @D4_App - implemented the steps listed in @RunBook Pages 1-2.pdf  to deliver the capabilities mentioned in the 10 items mentioned in the "Sprint 2 - Steps & Approach" table.
+
+### Assistant
+
+The map is in `D4_App/SPINE_IMPLEMENTATION.md`. It walks the ten **Sprint 2 - Steps & Approach** rows from runbook pages 1–2 and names the D4 files that deliver each one.
+
+The app is a React demo. Policy lives in `src/lib/p2pRulesEngine.ts`. Outcomes are `APPROVE`, `REVIEW`, and `REJECT` only. Payment writes the audit row first, then a WORM reference, then `PAID`. Notify and Pay use keys `{case_id}:notify` and `{case_id}:payment`. Scorer down stores an empty rank, not `0`.
+
+Training, live OCR, sanctions, geography, cloud IaC, and CI/CD are not in this browser app. Those stay Unknown, Missing, or `THRESHOLD_UNSET` in the same file.
+
+## 2026-09-21 23:40
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+Move the SPINE_IMPLEMENTATION.MD  to a sub-folder called "Documentation" under D4_APP/
+
+### Assistant
+
+The file now sits at `D4_App/Documentation/SPINE_IMPLEMENTATION.md`.
+
+The `D4_App/README.md` link points to that path. The old copy at `D4_App/SPINE_IMPLEMENTATION.md` is gone.
+

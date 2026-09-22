@@ -54,7 +54,7 @@ After Extract, these checks run side by side and write to the same case:
 
 1. Alias normalize (`V-201` / `V201`).
 2. Duplicate match on canonical supplier + PO + amount.
-3. Sibling invoices on the same canonical supplier (INV-1003 with INV-1004).
+3. Sibling invoices: until D3, join the named pair INV-1003 with INV-1004. A numeric sibling-time window is `THRESHOLD_UNSET`.
 4. Same-user requester and approver on linked changes (CH-88).
 5. Bank-change link (CH-88 to V-311 invoices).
 6. Non-PO flag.
@@ -130,5 +130,6 @@ Notify tells the requester and the supplier contact the outcome and the contest 
 ## What stays open
 
 - Timeout seconds: `THRESHOLD_UNSET`. D3 ADR.
+- Sibling-time window: `THRESHOLD_UNSET`. Until the ADR, join INV-1003 with INV-1004 only.
 - Goods-receipt feed: Missing.
 - REVIEW person name: Missing. D3 ADR.

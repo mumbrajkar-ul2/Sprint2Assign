@@ -665,5 +665,161 @@ Other defects to fix before or during S2b: Decide vs policy on REJECT, three dif
 
 Next step: new chat, attach this pack plus the C.8 table, write `C8_CHECK.md`.
 
+## 2026-09-21 17:15
 
+**Model:** Cursor Grok 4.6
+
+### User
+
+@Repo_2_0 @D1_AsIs_Assessment @SPRINT2_FDE_Learnings_and_Capstone_Guide - Learning Guide C8 Section - Patterns that failed in the lab.md 
+
+#### Prompt — S2b C.8 check
+
+You are an AI FDE governing a generated Repo 2.0 draft.
+
+Read Repo_2_0/ and D1_AsIs_Assessment/.
+
+Do not edit 05_procure_to_pay_exception_repo_1_0.
+Do not invent a cutoff.
+
+Check the draft against these failure patterns. For each row say PASS, FAIL, or NOT APPLICABLE, with a file citation. If FAIL, edit only Repo_2_0/ files to fix that row.
+
+- Accuracy or “90%” / 94% as the headline → use PR-AUC or the matching ranking metric, staffing, residual miss.
+- Easy made-up fraud or ROC-AUC above 0.95 → keep class overlap; do not invent a high AUC.
+- Tune a test set to hit a syllabus target → report measured numbers only.
+- Score shown as a percent chance → caption as uncalibrated ranking.
+- Retrain from PSI alone → investigate first.
+- Passing tests treated as the business problem solved → say which tests lock a gap.
+- Rewrite the inherited system on day one → D1 must remain the As-Is baseline.
+- AI invents a cutoff → THRESHOLD_UNSET plus ADR in D3.
+- Green tests with no exact golden → require exact payload compare later.
+- Retry the whole workflow → retry reversible steps only; key payment and notify.
+- except: pass and score = 0 → REVIEW, store unscored / None.
+- Keep the run open for a human → persist and resume.
+- Change Feed as the first recorder → application writes the audit row first.
+- Personal data locked in WORM → references in WORM; identity in a normal store.
+- Human review as an Accept-only button → equal-weight actions; Disagree is easy.
+- Policy only in the prompt → enforce in API / gateway / rules engine.
+- One risk tier for money and advice → verdict per capability.
+- Infra dashboards as the only AI monitoring → watch override rate, unscored rate, audit completeness, false-positive trend.
+- Thin prompt that omits numbers → numbers stay in this design.
+- Eval that checks only a subset of expected alerts → exact compare both ways.
+
+Write Repo_2_0/C8_CHECK.md with the table of results.
+If you edit other Repo_2_0 files, list the files in C8_CHECK.md.
+
+Done test: no FAIL remains that this P2P packet uses. NOT APPLICABLE is allowed for RAG-only or Lab 32 search-index rows.
+
+### Assistant
+
+The C.8 table is in `Repo_2_0/C8_CHECK.md`. After one fix, every row this payment packet uses is **PASS**. Lab 32 “index every file in a folder” is **NOT APPLICABLE**. This packet has no search index.
+
+The fail was an unlabeled sibling time window. `02_case_data_evidence.md` stored `sibling_invoice_ids` as invoices “in the same decision window.” That window had no number. `THRESHOLD_UNSET` now marks it. That label means the number stays unset until an Architecture Decision Record in D3 names an owner. Until then, sibling evidence is the named pair INV-1003 and INV-1004 only (4950 + 4950 = 9900, process times 11:15 and 11:16).
+
+Amount lines 5000 and 10000 stay As-Is evidence. Accuracy 0.94 stays a copied `evaluation.csv` cell. The operating headline is precision, recall, false-positive rate, catch rate, staffing, residual miss, and later PR-AUC. PR-AUC is the ranking score that pays attention to the rare class.
+
+Files edited for the fail:
+
+- `01_decision_risk_boundary.md`
+- `02_case_data_evidence.md`
+- `05_workflow.md`
+- `06_governed_decisioning.md`
+- `08_compliance_audit.md`
+- `README.md`
+- `TRACEABILITY.md`
+- `C8_CHECK.md`
+
+`REVIEW_NOTES.md` defects that are not C.8 rows were left in place: the dead APPROVE path, Notify order, duplicate match missing currency, alias name-mismatch, and multi-flag REVIEW owner.
+
+Repo 1.0 and D1 were left unchanged.
+
+## 2026-09-21 17:20
+
+**Model:** Cursor Grok 4.6
+
+### User
+
+explain the results in @Repo_2_0/C8_CHECK.md to a layman.
+
+### Assistant
+
+C.8 is a checklist of mistakes earlier labs already made. We scored the payment-system design against that list. After one fix, every row this invoice-payment pack uses is **PASS**. One extra row is **NOT APPLICABLE** because this pack has no search index.
+
+I will walk the table in everyday words.
+
+## What PASS, FAIL, and NOT APPLICABLE mean
+
+**PASS** means the design already does the safer thing the checklist asks for.
+
+**FAIL** means the design repeated a known lab mistake. We had one FAIL. We fixed it. That row is now PASS.
+
+**NOT APPLICABLE** means the mistake belongs to a different kind of system. This pack pays supplier invoices. It does not search a folder of documents to answer questions.
+
+## Scoring and model numbers
+
+**Accuracy 94% as the headline — PASS.** The inherited file stores accuracy 0.91 on model v1 and 0.94 on model v2. Those cells stay as copied facts. The live quality story uses other measures: how many flags were truly bad, how many bad cases were caught, how often good invoices are flagged, how many people the REVIEW queue needs, and how many bad pays still get through. Later work also uses PR-AUC. PR-AUC is a ranking score that pays extra attention to the rare bad class.
+
+**A made-up easy-fraud score above 0.95 — PASS.** The design does not invent a high ranking score. Some bad invoices will look like good ones on the listed features. AUC and PR-AUC are still missing from the evaluation file.
+
+**Tuning a test to hit a class target — PASS.** Report the measured cells. The four invoices in this pack (INV-1001 through INV-1004) are walk-throughs. They are not the official test set.
+
+**Score shown as a percent chance of fraud — PASS.** The model rank is an uncalibrated ranking. Uncalibrated means 0.7 is higher risk than 0.4. It is not “70% chance this invoice is fraud.” If the scorer is down, the rank stays blank.
+
+**Retrain because one drift number moved — PASS.** PSI is Population Stability Index. It is one number per column that compares an earlier slice of data to a later slice. A large PSI is a reason to look. The design says investigate first. Wait for later confirmed labels. Retrain is a later job.
+
+## Tests that can hide a gap
+
+**Green tests treated as “the problem is solved” — PASS.** Two inherited tests still pass today and still hide the known misses. “Missing PO under threshold” locked the shortcut that sent INV-1003 and INV-1004 (4950 + 4950 = 9900) through as PROCESS. “Exact invoice-number duplicate” locked the check that missed INV-1002, the second 9800 payment on the same supplier, PO, and amount. Those tests stay visible as gap locks until the new tests replace them.
+
+**Green tests with no exact expected result — PASS.** Later automated tests must compare the full result both ways: every expected reason code is present, and extra codes are absent.
+
+**Eval that only checks some of the alerts — PASS.** Keep the old invoice-number duplicate test. Add a test that matches supplier + PO + amount (INV-1001 vs INV-1002 at 9800). Add a test that joins alias ids `V-201` and `V201`. Compare exactly both ways.
+
+## Keep today’s system as evidence
+
+**Rewrite everything on day one — PASS.** D1 stays the reading of how the inherited system works today. Repo 1.0 stays the evidence folder. This design folder does not edit those files. Wave 1 on paper does two things: a model rank cannot authorize payment, and the bank-change-plus-split pair (CH-88, then INV-1003 and INV-1004) goes to a person.
+
+## The one FAIL, now fixed: an invented cutoff
+
+**AI invents a cutoff — PASS after a fix.** A cutoff is a number the system uses to choose a route, such as “under 5000, pay automatically.”
+
+The inherited lines 5000 and 10000 stay as today’s evidence. New lines (amount, timeout, how long to keep records, how long a supplier may contest, extract-accept, invoices-per-hour, amount bands) stay `THRESHOLD_UNSET`. That label means the number is unset until an Architecture Decision Record in D3 names an owner. An Architecture Decision Record is a short written choice: what you picked, why, and who owns it.
+
+The fail was this sentence: other invoices from the same supplier in “the same decision window.” That window had no number. Without a bound, every later invoice from supplier V-311 could attach to INV-1003.
+
+The fix: the sibling-time window is also `THRESHOLD_UNSET`. Until D3 names an owner, sibling evidence is the named pair only: INV-1003 and INV-1004, 4950 + 4950 = 9900, processed at 11:15 and 11:16.
+
+## Work that can be retried, and work that cannot
+
+**Retry the whole workflow — PASS.** Retry only steps you can safely run again: take in the invoice, read the PDF, check identity, set flags, call the scorer, recompute the rule result. Payment and notify use a key built from invoice id plus step name, for example `INV-1003:notify`. A second call with the same key returns the first result. The system does not pay twice and does not send two emails.
+
+**Scorer crash written as score 0 — PASS.** If the model is down, the case goes to REVIEW. REVIEW means a named person must decide. The store marks the case unscored. The rank stays empty.
+
+**Keep a live run open while a person thinks — PASS.** The case is saved. A later worker picks it up from the last stored step. If the REVIEW queue is down, the case stays stored as REVIEW and resumes when the queue returns.
+
+## Audit trail and personal data
+
+**A change feed as the first recorder — PASS.** A change feed is a copy of database changes. The application writes the audit row first. Then it stores references in WORM. WORM means write once, read many. After lock, delete and overwrite are refused for the retention period. Only then may status become `PAID`.
+
+**Personal data locked in WORM — PASS.** WORM holds references: audit row id, document hash, input hash, model version, rule version, outcome, times. Names, emails, and full bank numbers stay in a normal store that can delete them later. CH-89 emails stay in that normal store. WORM stores a hash of the email field, not the mailbox text.
+
+## People, rules, and watches
+
+**Review as an Accept-only button — PASS.** The person sees Agree, Disagree, and Override on the same screen. Disagree is as easy to press as Agree.
+
+**Policy only in a prompt — PASS.** Policy is a versioned rule pack the API enforces. A prompt may draft text. It does not pick APPROVE, REVIEW, or REJECT by itself.
+
+**One risk tier for money and advice — PASS.** Each use gets its own verdict: duplicate detection, bank-account change, split / empty-PO invoice, segregation of duties, payment release. AI may analyse and recommend. A named person decides. A named person pays. This pack has no advice-only use.
+
+**Only CPU and uptime charts for AI — PASS.** Operations also watches override rate, unscored rate, audit completeness, false-positive trend, residual miss, REVIEW staffing, and catch rate.
+
+**A thin design that drops the packet numbers — PASS.** The design keeps the locked numbers: two 9800 payments both `PAID`; 4950 + 4950 = 9900; CH-88 requester and approver both U22; alias `V-201` / `V201`; v1 precision 0.52, recall 0.71, false-positive rate 0.18; v2 false-positive rate 0.24; v2 precision and recall blank.
+
+## The extra row
+
+**Index every file in a folder — NOT APPLICABLE.** That mistake is for a search-index lab. This pack has no folder of documents to ingest for answers.
+
+## What this check did not fix
+
+`REVIEW_NOTES.md` still lists other defects: APPROVE cannot actually fire as written, Notify order disagrees across files, duplicate match omits currency, alias names can fight the join, and INV-1003 has no single REVIEW owner when three flags fire. Those are design bugs. They were outside this C.8 list.
 

@@ -20,7 +20,7 @@ Detect only where D1 evidence supports the signal. Do not invent feeds.
 | Velocity | Partial | Two process times one minute apart | INV-1003 at 11:15, INV-1004 at 11:16 on 2026-08-12. `invoices.csv` has no timestamps. |
 | Geographic | No | **Unknown**. No country or location field on the invoice rows. `vendor_verification.md` names countries and does not list them. | Do not invent a geography feed. |
 
-A numeric velocity cutoff (invoices per hour) is `THRESHOLD_UNSET`. Until a D3 ADR names an owner, store the sibling pair and the two times. Do not auto-REJECT on speed alone.
+A numeric velocity cutoff (invoices per hour) is `THRESHOLD_UNSET`. A numeric sibling-time window is also `THRESHOLD_UNSET`. Until a D3 ADR names an owner, store the named pair INV-1003 and INV-1004 and the two times (11:15 and 11:16). REJECT still needs a named rule from `06_governed_decisioning.md`. The sibling join stays that pair.
 
 ## Compliance escalation events
 
@@ -106,5 +106,6 @@ Worked rebuild two years later: a reader loads audit_row for INV-1003, follows `
 - P2P-05 owner: TBD. D3 ADR.
 - Geography feed: Unknown.
 - Velocity numeric cutoff: `THRESHOLD_UNSET`.
+- Sibling-time window: `THRESHOLD_UNSET`. Until the ADR, store INV-1003 and INV-1004 only.
 - Retention days: `THRESHOLD_UNSET`.
 - Per-user SoD matrix: Missing. File 09 asks for it.

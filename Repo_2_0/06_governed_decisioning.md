@@ -45,7 +45,7 @@ These conditions fire from packet facts. Each cites an RCTE row.
 | R-DUP | Canonical supplier, PO, and amount match a prior invoice. Invoice ids differ. | REJECT the later payment | REVIEW | RCTE-01 |
 | R-ALIAS | Raw supplier id has an alias sibling. Match uses the canonical id. | Same as R-DUP if a match appears | REVIEW if unresolved or matched | RCTE-02 |
 | R-SOD-BANK | Bank-account change requester equals approver. | REJECT applying the change | REVIEW. Change does not auto-apply. | RCTE-03 |
-| R-BANK-SPLIT | Linked bank change and (empty PO or sibling invoices on the same supplier). | REJECT silent pay | REVIEW | RCTE-04 |
+| R-BANK-SPLIT | Linked bank change and (empty PO or the named sibling pair INV-1003 / INV-1004). A numeric sibling-time window is `THRESHOLD_UNSET`. | REJECT silent pay | REVIEW | RCTE-04 |
 | R-NONPO | PO empty. | REVIEW | REVIEW | RCTE-05 |
 | R-SCORED-ONLY | Anomaly rank present and no other flag. | REVIEW | REVIEW. Rank alone cannot APPROVE or REJECT. | RCTE-06, RCTE-07 |
 | R-UNSCORED | Scorer failed or timed out. | REVIEW | REVIEW. Case unscored. | RCTE-08 |
@@ -110,6 +110,7 @@ INV-1001 and INV-1002 are already `PAID` in the inherited files. This design can
 ## What stays open
 
 - All amount lines: `THRESHOLD_UNSET`. D3 ADR plus named owner.
+- Sibling-time window: `THRESHOLD_UNSET`. Until the ADR, R-BANK-SPLIT uses the named pair INV-1003 / INV-1004.
 - Auto-REJECT without a person: unset. D3 ADR.
 - Approval-matrix inclusive vs exclusive: Missing (M-22).
 - REVIEW person and payer: Missing. D3 ADR.

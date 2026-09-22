@@ -14,7 +14,7 @@ D1 sources:
 | D1 id | What disagrees | Repo 2.0 file | Close or still open |
 |---|---|---|---|
 | C-01 | Approval matrix 5000 vs non-PO PROCESS under 5000. INV-1003 / INV-1004 PROCESS at 4950. | `06_governed_decisioning.md` | Closed as design: expedite retired. Empty PO → REVIEW. Amount line `THRESHOLD_UNSET`. Chooser (Procurement and AP_SUPERVISOR) still signs the D3 ADR. |
-| C-02 | Invoice splitting named vs no aggregation rule. Pair 9900 PROCESS. | `06_governed_decisioning.md`, `02_case_data_evidence.md` | Closed as design: sibling sum stored. Pair → REVIEW. No new cutoff. |
+| C-02 | Invoice splitting named vs no aggregation rule. Pair 9900 PROCESS. | `06_governed_decisioning.md`, `02_case_data_evidence.md` | Closed as design: named sibling pair INV-1003 / INV-1004 stored. Pair → REVIEW. Sibling-time window `THRESHOLD_UNSET`. |
 | C-03 | CH-88 same user vs no SoD rule. | `06_governed_decisioning.md`, `01_decision_risk_boundary.md` | Closed as design: R-SOD-BANK. Change does not auto-apply. |
 | C-04 | p2p-risk-2 accuracy headline vs worse false-positive rate and blank precision / recall. | `03_detection_models.md` | Closed as headline. Live version still open. Model owner Missing until D3. |
 | C-05 | P2P-01 Active vs INV-1002 paid pair. | `06_governed_decisioning.md`, `10_production_readiness.md` | Closed as design: match supplier + PO + amount. T-FN-02. |
@@ -92,7 +92,7 @@ These D1 gaps remain visible on purpose.
 3. Geography feed: Unknown.
 4. Goods-receipt feed: Missing.
 5. Model owner, data owner, REVIEW person, payer, P2P-05 owner: Missing or TBD.
-6. Every new amount, timeout, retention, and contest window: `THRESHOLD_UNSET`.
+6. Every new amount, timeout, retention, contest window, and sibling-time window: `THRESHOLD_UNSET`.
 7. v2 precision and recall: blank until filled.
 8. Peak-volume number: not invented.
 

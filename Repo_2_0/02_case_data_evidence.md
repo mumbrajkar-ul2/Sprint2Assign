@@ -68,7 +68,7 @@ These flags exist at decision time. They are stored on the case.
 | `linked_change_ids` | Change rows on the same canonical supplier before this invoice. | INV-1003: CH-88. INV-1001: CH-89 is email, not bank. |
 | `same_user_requester_approver` | `requester_id` equals `approver_id` on a change. | CH-88: true. CH-89: false. |
 | `non_po_flag` | PO empty. | INV-1003 and INV-1004: true. |
-| `sibling_invoice_ids` | Other invoices on the same canonical supplier in the same decision window. | INV-1003 sibling INV-1004. |
+| `sibling_invoice_ids` | Other invoices on the same canonical supplier. Until a D3 Architecture Decision Record (ADR) names a time bound, this field stores the named packet pair only: INV-1003 with INV-1004. A numeric sibling window is `THRESHOLD_UNSET`. | INV-1003 sibling INV-1004. |
 | `sibling_amount_sum` | Sum of this invoice plus siblings. | 4950 + 4950 = 9900. Honesty: PRECOMPUTED from the packet. |
 | `sod_vendor_and_pay_overlap` | Same user holds vendor-master and payment roles. | Named in `access_review.md`. Per-user matrix Missing. Store the flag when the access file supplies it. |
 | `extract_status` | `complete` or `uncertain` | Uncertain goes to REVIEW. |
@@ -76,6 +76,8 @@ These flags exist at decision time. They are stored on the case.
 | `anomaly_rank` | Uncalibrated model rank | Not a percent chance. Blank when unscored. |
 
 The As-Is 30-day bank window is an inherited field name (`bank_changed_30d`). A new window length is `THRESHOLD_UNSET`. Until a D3 ADR names an owner, the design uses the inherited flag as evidence and also links named change ids such as CH-88.
+
+A numeric sibling-time window is `THRESHOLD_UNSET`. An ADR in D3 must name an owner before anyone codes that window. Until then, sibling evidence is the named pair INV-1003 and INV-1004 (4950 + 4950 = 9900, process times 11:15 and 11:16 on 2026-08-12). The join stays that pair.
 
 ## Labels
 
@@ -173,4 +175,5 @@ Honesty on packet amounts and times: PRECOMPUTED.
 - Confirmed-fraud labels and the data owner: Missing. D3 ADR.
 - Country list for callback verification: Missing.
 - Meaning of approval-matrix `amount_limit` inclusive vs exclusive (M-22): `THRESHOLD_UNSET`. D3 ADR.
+- Sibling-time window: `THRESHOLD_UNSET`. Until the ADR, use the named pair INV-1003 and INV-1004.
 - Who pressed pay on INV-1001 and INV-1002: Missing in the inherited files. Those two payments already happened.

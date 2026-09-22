@@ -55,7 +55,7 @@ Each row uses locked D1 numbers as evidence of today’s behaviour.
 | Anomalous pricing | Model card lists `amount`. No price catalog in the packet. | Rank the case. Policy does not auto-pay from the rank. Uncertain price evidence goes to `REVIEW`. | RCTE-07 |
 | Supplier-master manipulation | CH-88: V-311 `bank_account` XXXX1122 to XXXX9988, requester U22, approver U22, `2026-08-11T13:44:00`, result SUCCESS. | Same-user bank change cannot apply itself. Outcome `REVIEW`. | RCTE-03 |
 | Approval bypass | INV-1003 and INV-1004: empty PO, 4950 each, `bank_changed_30d=Y`, rule `NON_PO_UNDER_5000`, result `PROCESS`. | Non-PO plus recent bank change goes to `REVIEW`. The As-Is 5000 expedite is retired. | RCTE-04, RCTE-05 |
-| Split invoices around the As-Is 5000 line | 4950 + 4950 = 9900, one minute apart (11:15 and 11:16 on 2026-08-12). | Aggregate sibling invoices on the same canonical supplier. Pair goes to `REVIEW`. 5000 stays As-Is evidence. | RCTE-04 |
+| Split invoices around the As-Is 5000 line | 4950 + 4950 = 9900, one minute apart (11:15 and 11:16 on 2026-08-12). | Store the named sibling pair INV-1003 and INV-1004. Pair goes to `REVIEW`. A numeric sibling-time window is `THRESHOLD_UNSET`. 5000 stays As-Is evidence. | RCTE-04 |
 | Segregation of duties | CH-88 same user. Some vendor-master users also pay. | Same requester and approver cannot finish a bank change. Vendor-master role cannot also release payment. | RCTE-03, RCTE-10 |
 | Evidence from vendor change to payment | Audit line for INV-1003 is `PROCESS`. It does not link CH-88. | One audit row stores CH-88 with INV-1003 and INV-1004 before any pay state change. | RCTE-09 |
 | Human escalation | Review queue is an email inbox. | A named person sees evidence, can agree or disagree, and records a disposition. | RCTE-11 |
@@ -130,3 +130,4 @@ AI may analyse and recommend on every capability. A named person decides. A name
 - REVIEW person name: Missing. D3 ADR.
 - P2P-05 owner: TBD. D3 ADR.
 - Numeric risk-appetite target: `THRESHOLD_UNSET`. D3 ADR.
+- Sibling-time window: `THRESHOLD_UNSET`. Until the ADR, use INV-1003 and INV-1004.

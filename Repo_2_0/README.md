@@ -40,13 +40,13 @@ If a new amount line is required, this design writes `THRESHOLD_UNSET`. An Archi
 | Spine | Repo 2.0 file | D1 gap it closes | What stays open |
 |---|---|---|---|
 | 1 Decision, risk, boundary | `01_decision_risk_boundary.md` | Trainer outcomes missing. No risk appetite. No prohibited-automation list. AI used as payment authorization (C-12, M-06, RCTE-06). | Regulatory obligations stay **Unknown** until change-request CR-REG-01 returns an answer. REVIEW owner name stays Missing until the D3 ADR. |
-| 2 Case, data, evidence | `02_case_data_evidence.md` | Alias join missing (M-03, C-08). Goods receipt missing (M-17). No label column. No payment-release actor (M-07). Weak lineage. | Goods-receipt feed stays Missing. Confirmed-fraud labels stay a later job for a named data owner. |
+| 2 Case, data, evidence | `02_case_data_evidence.md` | Alias join missing (M-03, C-08). Goods receipt missing (M-17). No label column. No payment-release actor (M-07). Weak lineage. | Goods-receipt feed stays Missing. Confirmed-fraud labels stay a later job for a named data owner. Sibling-time window stays `THRESHOLD_UNSET`. |
 | 3 Detection models | `03_detection_models.md` | Accuracy used as the headline (C-04, RCTE-07, M-12). v2 precision and recall blank. No independent validation. | Training on representative labelled data stays a later job. Model owner and data owner stay Missing until D3 names them. |
 | 4 Documents and identity | `04_document_identity_compliance.md` | Alias misses. Two extract confidence lines (M-21). Bank details not verified. Uncertain extract has no person route. | Sanctions, PEP, and address stay **Unknown**. Country callback list stays Missing. Cryptographic bank proof stays Missing. |
 | 5 Workflow | `05_workflow.md` | No event correlation (M-05). No retry key (M-18). Bank change and payment sit in separate flows. Scorer-down Unknown (M-08). Queue-outage Unknown (M-09). | Goods-receipt step stays Missing as a live feed. |
-| 6 Governed decisioning | `06_governed_decisioning.md` | `PROCESS` under 5000 (C-01, C-07). No split rule (C-02, M-01). No SoD rule (C-03, M-02). No alias rule (M-03). No precedence (M-04). Outcome words disagree (C-06). | Amount cutoffs stay `THRESHOLD_UNSET` until a D3 ADR. Auto-REJECT conditions stay unset until that ADR. |
+| 6 Governed decisioning | `06_governed_decisioning.md` | `PROCESS` under 5000 (C-01, C-07). No split rule (C-02, M-01). No SoD rule (C-03, M-02). No alias rule (M-03). No precedence (M-04). Outcome words disagree (C-06). | Amount cutoffs stay `THRESHOLD_UNSET` until a D3 ADR. Sibling-time window stays `THRESHOLD_UNSET`. Auto-REJECT conditions stay unset until that ADR. |
 | 7 Explainability and review | `07_explainability_review.md` | Email inbox. No reason codes. No linked evidence (M-10, M-11, RCTE-11). No contest path. | Feedback into a labelled training set waits for the data owner. |
-| 8 Compliance and audit | `08_compliance_audit.md` | P2P-05 Missing (RCTE-09). Vendor change not linked to the payment decision (M-05). | Geography feed stays **Unknown**. A numeric velocity cutoff stays `THRESHOLD_UNSET`. P2P-05 owner stays TBD until D3. |
+| 8 Compliance and audit | `08_compliance_audit.md` | P2P-05 Missing (RCTE-09). Vendor change not linked to the payment decision (M-05). | Geography feed stays **Unknown**. A numeric velocity cutoff stays `THRESHOLD_UNSET`. Sibling-time window stays `THRESHOLD_UNSET`. P2P-05 owner stays TBD until D3. |
 | 9 Risk, security, observability | `09_ai_risk_security_observability.md` | Shared model API key (M-14, RCTE-10). Vendor-master users also pay (C-11, M-15). Risk metrics not tracked (C-09, M-13). | Environment names stay Missing until operations names them. Drift action is investigate first. Retrain is a later job. |
 | 10 Production readiness | `10_production_readiness.md` | Tests omit alias, split, same-user, bank-then-pay, outage, rollback (C-10, M-20). No IaC, no release pack, no threshold gate (M-19, RCTE-12). | Peak-volume numbers stay EDUCATIONAL until a measured run exists. |
 
@@ -84,6 +84,8 @@ These items come from the runbook P2P list and the locked D1 cases.
 | `09_ai_risk_security_observability.md` | 9 |
 | `10_production_readiness.md` | 10 |
 | `TRACEABILITY.md` | D1 id → this folder |
+| `REVIEW_NOTES.md` | S2a review before C.8 |
+| `C8_CHECK.md` | S2b C.8 results |
 
 ## Done test for this pack
 

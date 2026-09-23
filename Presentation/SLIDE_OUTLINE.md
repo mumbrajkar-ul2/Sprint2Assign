@@ -79,4 +79,63 @@ Use case 5 is Procure-to-Pay Exception and Payment Control. Source for the use-c
 - Precision and recall on model p2p-risk-2 are blank. PR-AUC is Missing. No one has measured how many bad pays still get through.
 - Naive and cached Pay and Notify counts are Unknown. The measured safe payment count on INV-1005 stayed at 1.
 - The 22 Sep session did not record an Open Contest click. A second write of the same audit id was not attempted. Those two results are Unknown.
-- The demo audit list lives in the browser. It is a classroom stand-in for a write-once store.
+- The demo audit list lives in the browser. It is a classroom copy of a store that refuses delete and overwrite.
+
+## Slide 8 — Appendix: Repo 1.0 files compared with the D4 app
+
+Repo 1.0 is the inherited file pack. The D4 app is the running demo built from the Repo 2.0 design.
+
+Repo 1.0 features:
+
+- A folder of files. Four invoices, two supplier changes, alias names, rules, a model card, and five controls.
+- The duplicate check uses the invoice number only.
+- An empty purchase order under 5,000 goes forward. The result word is PROCESS.
+- A recent bank change goes to review only when the amount is over 10,000.
+
+Repo 1.0 limitations:
+
+- INV-1001 and INV-1002 are both paid at 9,800 USD. The check stored NO_DUPLICATE.
+- INV-1003 and INV-1004 are 4,950 + 4,950 = 9,900. Both took PROCESS. CH-88 is user U22 on both sides. The audit line does not link that change.
+- P2P-05 is Missing. Owner TBD. There is no payment retry key. If the scorer is down, the path is Unknown.
+- p2p-risk-2 flags 0.24 of good invoices. p2p-risk-1 flags 0.18. Precision and recall on p2p-risk-2 are blank.
+
+D4 app features:
+
+- Screens run from Ingest through Pay, plus Case History.
+- Outcomes are APPROVE, REVIEW, and REJECT. A named person can disagree. A named person pays.
+- INV-1002 goes to REVIEW on supplier, purchase order, and amount. V201 joins to V-201.
+- CH-88 and the 4,950 pair go to REVIEW. A second Pay click stays at count 1. Scorer down leaves the rank empty.
+
+D4 app limitations:
+
+- The click evidence is the local browser app. The hosted page stopped at Google sign-in.
+- The P2P-05 owner is still TBD. New amount lines are still unset. The goods-receipt file is still Missing.
+- Precision and recall on p2p-risk-2 are still blank. PR-AUC is Missing.
+- The contest click, a second write of the same audit id, and the naive retry counts were not measured.
+
+## Slide 9 — Appendix: how the D4 app answers the four Repo 1.0 flaws
+
+- Flaw 1. Both 9,800 USD invoices were paid. The check stored NO_DUPLICATE. The D4 app sends INV-1002 to REVIEW. The match is supplier V-201, purchase order PO-7001, and 9,800 USD. Payment count stays 0.
+- Flaw 2. The 4,950 pair took PROCESS. CH-88 is user U22 on both sides. The audit line does not link that change. The D4 app keeps both invoices in REVIEW. The screen names CH-88, same user U22, the empty purchase order, and the pair sum 9,900. The audit row stores BANK_CHANGE_LINKED.
+- Flaw 3. P2P-05 is Missing. There is no payment retry key. If the scorer is down, the path is Unknown. The D4 app uses a payment key. A second click on INV-1005 stays at count 1. Scorer down sets REVIEW and leaves the rank empty. The P2P-05 owner is still TBD.
+- Flaw 4. p2p-risk-2 flags 0.24 of good invoices. p2p-risk-1 flags 0.18. Precision and recall on p2p-risk-2 are blank. The metrics page shows those rates. The rank orders the case. A named person pays. Precision and recall on p2p-risk-2 stay blank.
+
+## Slide 10 — Appendix glossary: codes on the cases
+
+- CH is a supplier-master change id. CH-88 is the bank change. CH-89 is the email change. The files do not spell out the letters C and H.
+- U is a user id. U22 requested and approved CH-88. U11 is on the two paid invoices.
+- INV is an invoice id. V is a supplier id. PO is the purchase order, the company’s buy record.
+- AP is Accounts Payable. P2P is Procure-to-Pay.
+- P2P-01 through P2P-05 are the five controls. P2P-05 is Missing. Owner TBD.
+- P2P-FR is a functional requirement. P2P-AC is an acceptance case.
+- SoD is segregation of duties. The requester and the approver are different people.
+
+## Slide 11 — Appendix glossary: codes on the documents
+
+- D1 to D4 are the reading, the design, the requirements, and the app. D3a is this requirements version. D3b must name the owners.
+- PRD is the Product Requirements Document. ADR is the short note that records a number, an owner, and why.
+- TBD means no person is named yet. PROCESS is the old result word.
+- WORM means write once, read many. After lock, delete and overwrite are refused.
+- PR-AUC is a ranking score for the rare bad class. That number is Missing.
+- USD is the currency on the four invoices. ERP is the company system named in use case 5. The packet does not spell out E, R, and P.
+- C-01, C-02, and C-03 are the three conflicts on slide 2.

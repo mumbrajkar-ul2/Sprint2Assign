@@ -1598,3 +1598,201 @@ The notes for slide 6 walk the rebuild: actor Ada, from-state DECIDED, to-state 
 
 `Presentation/README.md` now lists the deck next to the outline and the defence answers.
 
+## 2026-09-22 11:42
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+Add a Glossary of acronyms (CH, FR, U, etc) used across this project at the end of the presentation
+
+### Assistant
+
+Two glossary slides are now at the end of `Presentation/Team_Presentation.pptx`. The deck is 9 slides. The earlier footers now say 9.
+
+Slide 8 lists the codes on the cases and the controls: CH, U, INV, V, PO, AP, P2P, P2P-01 to P2P-05, P2P-FR, P2P-AC, and SoD.
+
+Slide 9 lists the codes on the documents: D1 to D4, D3a and D3b, PRD, ADR, TBD, PROCESS, WORM, PR-AUC, USD, ERP, and C-01 to C-03.
+
+Each row says what the code means in this project, with one worked example. The notes under each slide say more, including the codes that did not fit on the table: P2P-SM, ESC, RCTE, SLA, OCR, and PEP. Where the files never spell the letters, the notes say that. CH, U, TBD, and ERP are in that group.
+
+`Presentation/SLIDE_OUTLINE.md` has the same two slides in text.
+
+## 2026-09-22 12:26
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+Move these acronym slides in Appendix. Create a slide in Appendix section that compares the original application (based on Repo 1 - @05_procure_to_pay_exception_repo_1_0 ) with the improved application (in Repo 2 - @D4_App )  in terms of A. features B. Limitations/Flaws. Update the notes section as well
+
+### Assistant
+
+The deck is now 10 slides. Slides 8 to 10 are the appendix. Reopen `Presentation/Team_Presentation.pptx` if it was already open. The file was closed so the new slides could be saved.
+
+Slide 8 compares the two sides. The left side is Repo 1.0, the inherited folder of files. That folder has no screens. The right side is the D4 app, the running demo built from the Repo 2.0 design.
+
+Each side has two parts. A is what that side can do. B is what is still wrong or missing.
+
+Repo 1.0 can store the four invoices, the two supplier changes, the rules, and the five controls. Its duplicate check uses the invoice number only. An empty purchase order under 5,000 goes forward as PROCESS. The flaws are the paid pair INV-1001 and INV-1002, the 9,900 pair that took PROCESS, CH-88 with user U22 on both sides and no audit link, P2P-05 Missing, and a worse false-positive rate on p2p-risk-2 (0.24 versus 0.18).
+
+The D4 app walks Ingest through Pay and Case History. Outcomes are APPROVE, REVIEW, and REJECT. INV-1002, the V201 alias, and the CH-88 pair go to REVIEW. A second Pay click stays at count 1. What stays open: the hosted page stopped at Google sign-in, the P2P-05 owner is still TBD, new amount lines are still unset, precision and recall on p2p-risk-2 are still blank, and the contest click was not measured.
+
+The notes under slide 8 are the speaking script, with the source files named. Slides 9 and 10 are the glossary, now labeled Appendix. Their notes say they are appendix slides.
+
+`Presentation/SLIDE_OUTLINE.md` matches this order.
+
+## 2026-09-22 14:33
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+add a slide on how the improved application (in Repo 2 - @D4_App )  addresses the below limitations/flaws in the original application (based on Repo 1 - @05_procure_to_pay_exception_repo_1_0 ) , namely ,
+B. Limitations and flaws
+INV-1001 and INV-1002 are both paid at 9,800 USD. The check stored NO_DUPLICATE.
+INV-1003 and INV-1004 are 4,950 + 4,950 = 9,900. Both took PROCESS. CH-88 is user U22 on both sides. The audit line does not link that change.
+P2P-05 is Missing. Owner TBD. No payment retry key. If the scorer is down, the path is Unknown.
+p2p-risk-2 flags 0.24 of good invoices. p2p-risk-1 flags 0.18. Precision and recall on p2p-risk-2 are blank.
+
+### Assistant
+
+Slide 9 is now in the appendix of `Presentation/Team_Presentation.pptx`. It sits after the comparison and before the glossary. The deck is 11 slides. The notes under that slide are the speaking script.
+
+Each of the four Repo 1.0 flaws has a D4 answer from the 22 September click notes.
+
+The paid pair. INV-1002 goes to REVIEW. The match is supplier V-201, purchase order PO-7001, and 9,800 USD. Payment count stays 0.
+
+The split pair and CH-88. Both invoices stay REVIEW. The screen names CH-88, same user U22, the empty purchase order, and the pair sum 9,900. The audit row stores the reason BANK_CHANGE_LINKED. The click notes did not record the change id as its own field on that history row. That detail stays Unknown.
+
+The missing control and the unknown failure path. Pay uses a key. A second click on INV-1005 stays at count 1. Scorer down sets REVIEW and leaves the rank empty. The P2P-05 owner is still TBD.
+
+The model rates. The metrics page shows false-positive rate 0.24 on p2p-risk-2 and 0.18 on p2p-risk-1. The rank orders the case. A named person pays. Precision and recall on p2p-risk-2 stay blank.
+
+`Presentation/SLIDE_OUTLINE.md` lists the same slide as slide 9. The glossary is now slides 10 and 11.
+
+## 2026-09-22 14:56
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+does REPO 1 support any payment status other than PROCESS?
+
+### Assistant
+
+Yes. Repo 1.0 stores more than one status word. PROCESS is the result the four packet cases actually hit.
+
+The rule file names three actions: BLOCK, REVIEW, and PROCESS. A duplicate invoice number maps to BLOCK. A bank change in the last 30 days with an amount over 10,000 maps to REVIEW. An empty purchase order under 5,000 maps to PROCESS. Source: `05_procure_to_pay_exception_repo_1_0/06_governed_decisioning/exception_rules.yaml`.
+
+The invoice file uses two status words of its own. INV-1001 and INV-1002 are PAID. INV-1003 and INV-1004 are APPROVED. Source: `05_procure_to_pay_exception_repo_1_0/02_data_evidence/invoices.csv`.
+
+On the cases you can replay, the decision text is PROCESS. The log stores PROCESS for INV-1003 and INV-1004. The decision file stores PROCESS for INV-1002, INV-1003, and INV-1004. The audit line for INV-1003 stores action PROCESS. None of those rows stores BLOCK or REVIEW. Sources: `05_workflow_orchestration/processing_log.txt`, `07_explainability_review/sample_decisions.txt`, `08_compliance_audit/audit_extract.log`.
+
+CH-88 stores result SUCCESS. That word is on the bank-change line. It is a change result, and it is a separate word from the invoice status.
+
+## 2026-09-22 17:12
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+Explain in layman terms - "Flaw 3. The missing payment record, the missing retry key, and the unknown scorer path. Control P2P-05 is immutable payment decision evidence. In Repo 1.0 the status is Missing and the owner is TBD. Immutable means the record cannot be overwritten or deleted for the keep period. The inherited files also store no payment retry key. The test list says a model outage is not tested, so the scorer-down path is Unknown. In the D4 app, payment uses a key made from the invoice id plus the word payment. On INV-1005 the count was 0. The first click set it to 1 and status PAID & SETTLED, and stored audit id AUDIT-INV-1005-PAY. The write-once reference count went from 1 row to 2 rows. The second click kept the count at 1 under key INV-1005:payment.
+
+When the scorer was switched down, INV-1005 showed rank NULL, banner UNSCORED, and outcome REVIEW. The notes record no score of 0. Two limits stay. The P2P-05 owner is still TBD. A second write of the same audit id was not attempted, so a measured refusal is Unknown. The demo list lives in the browser. It is a classroom copy of a write-once store.
+"
+
+### Assistant
+
+This paragraph is about three holes in the old files, and what the new app did about each one.
+
+**The old files**
+
+The company should keep a record of every payment decision, and that record should stay as it was written. Nobody should be able to change it or delete it during the time the company must keep it. That control is named P2P-05. In the inherited folder its status is Missing. The owner cell says TBD, which means no person is named to look after it.
+
+The old files also have no stored name that stops a second click from paying the same invoice again. Click Pay twice, and nothing in those files proves the money went out only once.
+
+The scorer is the model that ranks an invoice. The old test list never tried “the model is down.” So the old files do not say what should happen. That path is Unknown.
+
+**What the new app did**
+
+Payment now carries a stored name. The name is the invoice id plus the word payment. For invoice INV-1005 the name is `INV-1005:payment`.
+
+On that invoice the payment count started at 0. The first Pay click paid it. The count became 1. The status became PAID & SETTLED. The app also wrote a decision record with the id `AUDIT-INV-1005-PAY`. A short reference list on screen grew from 1 row to 2 rows. That list is meant to point at the decision record.
+
+The second Pay click used the same name, `INV-1005:payment`. The count stayed 1. The app returned the first payment. It did not create a second one.
+
+Then the model was switched off on that same invoice. The rank box showed the word NULL, which means the rank is empty. A banner said UNSCORED. The outcome became REVIEW, so a person has to decide. The screen did not fill in a score of 0. A 0 would look like a real rank. An empty rank means the model did not answer.
+
+**What is still unfinished**
+
+No person is named yet as the owner of P2P-05. That cell is still TBD.
+
+The team did not try to save the same decision-record id a second time. So there is no measured proof, from that session, that the store refuses the second save. That result is Unknown.
+
+The reference list in the demo sits in the browser on that computer. It is a classroom copy of a store that keeps a record unchanged. It is a practice list for the demo. It is not the company’s long-term archive.
+
+## 2026-09-22 17:17
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+explain in layman terms - "Flaw 4. The model evidence. False-positive rate is the share of good invoices the model flags. p2p-risk-2 flags 0.24. p2p-risk-1 flags 0.18. Precision and recall on p2p-risk-2 are blank. p2p-risk-1 stores precision 0.52 and recall 0.71. The D4 metrics page showed those cells. It showed a classroom catch rate of 4 of 4 packet patterns. It did not show an accuracy 0.94 figure. The rank on a case is an order in the demo set. A named person releases payment. The rank does not set the invoice to paid. What this slide does not claim: the app did not fill the blank precision and recall, and it did not measure a new false-positive rate. PR-AUC is still Missing. PR-AUC is a ranking score that pays extra attention to the rare bad class.
+Source files: D1_AsIs_Assessment/02_CASE_REPLAY.md. D1_AsIs_Assessment/04_MISSING_CONTROLS.md. D4_App/TEST_EVIDENCE.md. D4_App/DEMO_SCRIPT.md. D4_App/SIDE_EFFECT_COUNTER.md."
+
+### Assistant
+
+This paragraph is about how good the risk model is, and what the demo is willing to say about it.
+
+**Two versions of the same model**
+
+`p2p-risk-1` is the older version. `p2p-risk-2` is the later version. Both try to point at invoices that look risky.
+
+**What the numbers mean**
+
+False-positive rate is the share of good invoices the model still flags. Picture 100 good invoices. Version 1 flags 18 of them. Version 2 flags 24 of them. Version 2 stops more good invoices than version 1.
+
+Precision is the share of flagged invoices that were later confirmed bad. On version 1 that number is 0.52. Picture 100 invoices the model flagged. About 52 were actually bad. On version 2 that cell is blank. Nobody filled it in.
+
+Recall is the share of bad invoices the model caught. On version 1 that number is 0.71. Picture 100 bad invoices. The model flagged about 71. On version 2 that cell is also blank.
+
+**What the demo page showed**
+
+The metrics page in the app showed those same cells: 0.52, 0.71, 0.18, and 0.24, and the two blanks on version 2. It also showed a classroom catch rate of 4 out of 4. That means the four patterns in this packet were all caught in the walk-through: the duplicate, the alias, the same-user bank change, and the split pair. Four homework cases are a classroom check. They are a small walk-through. They are a small set.
+
+The inherited file also stores an accuracy of 0.94 on version 2. The demo page left that number off the screen. The page leads with the false-positive rate, because version 2 flags more good invoices than version 1.
+
+**What the rank is allowed to do**
+
+The rank is a place in line. On INV-1003 the place was 2nd in a demo set of 420. A named person presses Pay. The rank only orders the queue.
+
+**What this slide is leaving unsaid on purpose**
+
+The app copied the blank precision and recall. It did not invent numbers to fill them. It also did not run a new test to replace 0.24 and 0.18.
+
+PR-AUC is still Missing. That is a score for ranking when bad invoices are rare. It looks harder at whether the flagged invoices were truly bad, and whether the bad ones were caught. The evaluation file never stored that score.
+
+## 2026-09-22 17:31
+
+**Model:** Cursor Grok 4.7
+
+### User
+
+explain - "What the rank is allowed to do
+
+The rank is a place in line. On INV-1003 the place was 2nd in a demo set of 420. A named person presses Pay. The rank only orders the queue."
+
+### Assistant
+
+The rank is a place in a line. The model sorts invoices from the one that looks most risky to the one that looks least risky. A higher place means “look at this one sooner.”
+
+On INV-1003 the screen said **#2 of 420**. In that demo line, 420 invoices were lined up, and INV-1003 stood second. One invoice sat ahead of it. The 420 is the size of the practice list on the screen. It is a classroom set for the demo. It is a practice list.
+
+Paying is a separate step. A named person presses Pay. That click is what marks the invoice paid. On INV-1003 the rank put the invoice near the front of the line. The outcome was still REVIEW, so a person had to decide. Ada clicked. The rank itself left the money where it was.
+
+So the rank’s job is to order the queue. The person’s job is to release the payment.
+
+
+
+

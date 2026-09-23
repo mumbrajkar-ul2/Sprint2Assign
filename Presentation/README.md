@@ -19,9 +19,9 @@ Repo 1.0 stays in `05_procure_to_pay_exception_repo_1_0`. This presentation does
 
 | File | What you do with it |
 |---|---|
-| `Presentation/SLIDE_OUTLINE.md` | Speak slides 1 through 7 in that order. |
+| `Presentation/SLIDE_OUTLINE.md` | The same eleven slides in text, including the appendix. |
 | `Presentation/DEFENCE.md` | Answer the nine questions for this packet. Each answer ends with the source file. |
-| `Presentation/Team_Presentation.pptx` | The same seven slides, with a speaking script in the notes of each slide. |
+| `Presentation/Team_Presentation.pptx` | Eleven slides. Slides 1 to 7 are the walkthrough. Slides 8 to 11 are the appendix: the Repo 1.0 and D4 comparison, how the D4 app answers the four flaws, then the glossary. Each slide has a speaking script in the notes. |
 
 ## Done test
 
